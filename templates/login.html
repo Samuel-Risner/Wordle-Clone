@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+{% block language %}en{% endblock %}
+
+{% block content %}
+    <script type="text/javascript" src="static/js/input_to_b64.js"></script>
+        
+    <input type="text" id="username">
+    <input type="password" id="password">
+
+    <form method="post" id="to_submit">
+        <button type="submit" onclick="input_to_b64(['username', 'password'], 'to_submit')">
+            Submit
+        </button>
+    </form>
+{% endblock %}

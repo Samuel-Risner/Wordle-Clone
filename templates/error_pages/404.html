@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Error 404{% endblock %}
+{% block language %}en{% endblock %}
+
+{% block content %}
+    <h1>Error 404</h1>
+    <p>
+        Page not found.
+    </p>
+    <p>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">
+            Look at what this means.
+        </a>
+    </p>
+    <!-- <p>
+        {% if origin %}
+            <a href="/{{ origin }}">
+                Return to where you came from.
+            </a>
+        {% endif %}
+    </p> -->
+    <p>
+        <a href="/">
+            Go home.
+        </a>
+    </p>
+{% endblock %}
