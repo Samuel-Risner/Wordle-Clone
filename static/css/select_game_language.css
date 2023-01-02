@@ -1,0 +1,17 @@
+.language_button {
+    background-color: red;
+
+    border: 0px;
+    margin: 5vw;
+    margin-bottom: 0px;
+
+    width: 90vw;
+    height: 90vw;
+
+    font-size: 75vw;
+    text-align: center;
+}
+
+.spacer {
+    height: 5vw;
+}

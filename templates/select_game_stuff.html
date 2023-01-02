@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block language %}en{% endblock %}
+
+{% block content %}
+    <script type="text/javascript" src="/static/js/display_input_value.js"></script>
+    <div>
+        Language {{ language }}
+        <a href="{{ select_language_url }}">
+            Go back to select another language.
+        </a>
+    </div>
+
+    <div>
+        <form method="post">
+            <label for="word_length">The length of the word:</label>
+            <input type="range" id="word_length" name="word_length" min="{{ min_word_length}}" 
+                max="{{ max_word_length }}" oninput="display_input_value('word_length', 'word_length_value')"
+                step="1">
+            <div id="word_length_value"></div>
+
+            <label for="amount_tries">The amount of tries for gessing the word:</label>
+            <input type="range" id="amount_tries" name="amount_tries" min="{{ min_tries}}" max="{{ max_tries }}"
+                oninput="display_input_value('amount_tries', 'amount_tries_output')", step="1">
+            <div id="amount_tries_output"></div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}

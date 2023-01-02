@@ -13,8 +13,11 @@ from core.db_models import User as MODEL_USER
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
 from core.validate_password_username import validate_password, validate_username, b64_decode
+from core.word_handler import WordHandler
 from settings.db import DB
 import settings
+
+word_handler = WordHandler()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = get_app_secret_key()
@@ -42,19 +45,85 @@ for error_num in settings.errors.SUPPORTED_ERROR_PAGES:
 #     dict1 = {"prop1": "p1", "prop2": "p2"}
 #     return Response(json.dumps(dict1), mimetype='application/json')
 
+@app.route("/game/<language>/<word_length>/<amount_tries>")
+# @login_required
+def game(language: str, word_length: str, amount_tries: str):
+    if language not in settings.game.SUPPORTED_LANGUAGES:
+        return redirect("/error/400/home", code=303)
+
+    try:
+        word_length = int(word_length)
+    except ValueError:
+        return redirect("/error/400/home", code=303)
+
+    try:
+        amount_tries = int(amount_tries)
+    except ValueError:
+        return redirect("/error/400/home", code=303)
+
+    return render_template("game.html")
+
+@app.route("/game/<language>", methods=["GET", "POST"])
+# @login_required
+def select_game_size(language: str):
+    if language not in settings.game.SUPPORTED_LANGUAGES:
+        return redirect("/error/400/home", code=303)
+    
+    if request.method == "POST":
+        word_length = request.form.get("word_length")
+        amount_tries = request.form.get("amount_tries")
+
+        if (word_length is None) or (amount_tries is None):
+            return redirect("/error/400/home", code=303)
+        
+        try:
+            word_length = int(word_length)
+        except ValueError:
+            return redirect("/error/400/home", code=303)
+        
+        try:
+            amount_tries = int(amount_tries)
+        except ValueError:
+            return redirect("/error/400/home", code=303)
+
+        return redirect(url_for("game",language=language, word_length=word_length, amount_tries=amount_tries))
+
+    return render_template(
+        "select_game_stuff.html",
+        language=language,
+        select_language_url=url_for("select_game_language"),
+        min_word_length=settings.game.MIN_WORD_LEN,
+        max_word_length=settings.game.MAX_WORD_LEN,
+        min_tries=settings.game.MIN_TRIES,
+        max_tries=settings.game.MAX_TRIES
+    )
+
+@app.route("/game")
+# @login_required
+def select_game_language():
+    return render_template(
+        "select_game_language.html",
+        languages=settings.game.SUPPORTED_LANGUAGES,
+        select_game_size_url=url_for("select_game_size", language="")
+    )
+
 @app.route("/")
-def index():
+def index():    
     return render_template("index.html")
 
-@app.route("/account")
-@login_required
-def account():
-    return render_template("account.html")
+@app.route("/home")
+def home():
+    return redirect(url_for("index"))
 
-@app.route("/account/delete_account")
-@login_required
-def delete_account():
-    return render_template("delete_account.html")
+# @app.route("/account")
+# @login_required
+# def account():
+#     return render_template("account.html")
+
+# @app.route("/account/delete_account")
+# @login_required
+# def delete_account():
+#     return render_template("delete_account.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
