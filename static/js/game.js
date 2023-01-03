@@ -41,11 +41,20 @@ var current_try = 0;
 var letters = [];
 var current_letter = [0, 0];
 var current_word = "";
+/**
+ * This function is called from a script tag in the html file.
+ * @param new_game_id The game id that is going to be used.
+ * @param new_amount_tries How many tries the user has / how often they can guess.
+ * @param new_word_length The length of the word the user is trying to guess.
+ */
 function set_stuff(new_game_id, new_amount_tries, new_word_length) {
     game_id = new_game_id;
     amount_tries = Number(new_amount_tries);
     word_length = Number(new_word_length);
 }
+/**
+ * Creates the ui in which the user can see their guesses. This function is called from a script tag in the html file.
+ */
 function init_game() {
     var game = document.getElementById("game");
     if (game === null) {
@@ -71,17 +80,11 @@ function init_game() {
         }
     }
 }
-function _set_current_letter() {
-    for (var h = 0; h < letters.length; h++) {
-        for (var w = 0; w < letters[h].length; w++) {
-            if (letters[h][w].textContent != "") {
-                current_letter = [w, h];
-                return true;
-            }
-        }
-    }
-    return false;
-}
+/**
+ * This function gets the current game state from the server. This is needed when the user leaves the page or
+ * accidentaly refreshes the game.
+ * @returns A promise for json data.
+ */
 function _get_progress_async() {
     return __awaiter(this, void 0, void 0, function () {
         var response, json;
@@ -98,6 +101,38 @@ function _get_progress_async() {
         });
     });
 }
+/**
+ * Sets the position were the user stopped playing the game.
+ */
+function _set_current_letter() {
+    for (var h = 0; h < letters.length; h++) {
+        for (var w = 0; w < letters[h].length; w++) {
+            if (letters[h][w].textContent == "") {
+                current_letter = [w, h];
+                current_try = h;
+                return;
+            }
+        }
+    }
+}
+/**
+ * Undos the last word as long as it wasn't submitted.
+ */
+function _undo_last_word() {
+    for (var i = 0; i < word_length; i++) {
+        letters[current_letter[1]][i].textContent = "";
+        current_letter = [0, current_letter[1]];
+        current_word = "";
+    }
+}
+/**
+ * Loads the already existing tries into the ui.
+ * @param json_data The data for the tries, it consists of a string, the guesses word, and then an array of numbers
+ * where each number corresponds to a character of the word:
+ *      > 0: letter does not occur in word that the user is trying to guess
+ *      > 1: letter occurs in word but isn't at the right position
+ *      > 2: letter occurs in the word and is at the right position.
+ */
 function _set_progress(json_data) {
     for (var line = 0; line < json_data.length; line++) {
         var word = json_data[line][0];
@@ -105,22 +140,46 @@ function _set_progress(json_data) {
         for (var letter = 0; letter < word.length; letter++) {
             var character = word.charAt(letter);
             var num = match[letter];
-            letters[line][letter].textContent = character + num;
+            var letter_object = letters[line][letter];
+            letter_object.textContent = character;
+            if (num == 0) {
+                letter_object.className = "letter does_not_occur_in_game";
+            }
+            else if (num == 1) {
+                letter_object.className = "letter occurs_in_word";
+            }
+            else if (num == 2) {
+                letter_object.className = "letter correct_position";
+            }
         }
     }
     _set_current_letter();
 }
+/**
+ * This function handels the promise from the async function `_get_progress_async` and passes it on to the function
+ * `_set_progress`. This function is also called from a script tag in the html file.
+ */
 function set_progress() {
     _get_progress_async().then(function (_res) { console.log("SUPER!"); console.log(_res); _set_progress(_res); })["catch"](function (_res) { console.log("UPSI!"); console.log(_res); });
 }
+/**
+ * Enters an letter into the ui.
+ * @param letter The letter that is to be entered into the ui.
+ */
 function _add_letter(letter) {
     if (current_letter[0] >= word_length) {
+        return;
+    }
+    if (current_try >= amount_tries) {
         return;
     }
     letters[current_letter[1]][current_letter[0]].textContent = letter;
     current_letter[0] = current_letter[0] + 1;
     current_word = current_word + letter;
 }
+/**
+ * Removes the last letter that was entered into the ui, aslong as the entered word wasn't submited.
+ */
 function _remove_letter() {
     if (current_letter[0] <= 0) {
         return;
@@ -128,8 +187,56 @@ function _remove_letter() {
     current_word = current_word.substring(0, current_word.length - 1);
     current_letter[0] = current_letter[0] - 1;
     letters[current_letter[1]][current_letter[0]].textContent = "";
-    console.log("REMOVE!");
 }
+/**
+ *
+ * @returns A promise with json data containing the matches for the characters with the guessed word.
+ */
+function _get_word_result() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, json;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("/json/add_word/" + game_id + "/" + current_word)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    json = _a.sent();
+                    return [2 /*return*/, json];
+            }
+        });
+    });
+}
+function _evaluate_submit_result(json_data) {
+    if (json_data === null) {
+        _undo_last_word();
+        return;
+    }
+    for (var i = 0; i < word_length; i++) {
+        var letter_object = letters[current_letter[1]][i];
+        var num = json_data[i];
+        if (num == 0) {
+            letter_object.className = "letter does_not_occur_in_game";
+        }
+        else if (num == 1) {
+            letter_object.className = "letter occurs_in_word";
+        }
+        else if (num == 2) {
+            letter_object.className = "letter correct_position";
+        }
+    }
+    current_word = "";
+    current_letter = [0, current_letter[1] + 1];
+    current_try = current_try + 1;
+    _victory(json_data);
+}
+function _enter() {
+    _get_word_result().then(function (_res) { console.log("SUPER!"); console.log(_res); _evaluate_submit_result(_res); })["catch"](function (_res) { console.log("UPSI!"); console.log(_res); });
+}
+/**
+ * Creates the keyboard for the user.
+ */
 function create_keyboard() {
     var keyboard_object = document.getElementById("keyboard");
     if (keyboard_object === null) {
@@ -154,6 +261,7 @@ function create_keyboard() {
         var letter_ = row_1.charAt(letter);
         button.textContent = letter_;
         button.onclick = function () { _add_letter(letter_); };
+        button.id = letter_;
     };
     var cell, div, button;
     for (var letter = 0; letter < row_1.length; letter++) {
@@ -174,6 +282,7 @@ function create_keyboard() {
         var letter_ = row_2.charAt(letter);
         button.textContent = letter_;
         button.onclick = function () { _add_letter(letter_); };
+        button.id = letter_;
     };
     var cell, div, button;
     for (var letter = 0; letter < row_2.length; letter++) {
@@ -195,6 +304,7 @@ function create_keyboard() {
     var img = document.createElement("img");
     button.appendChild(img);
     img.src = "/static/images/enter_key.svg";
+    button.onclick = _enter;
     var _loop_3 = function () {
         cell = document.createElement("td");
         row.appendChild(cell);
@@ -205,6 +315,7 @@ function create_keyboard() {
         var letter_ = row_3.charAt(letter);
         button.textContent = letter_;
         button.onclick = function () { _add_letter(letter_); };
+        button.id = letter_;
     };
     var cell, div, button;
     for (var letter = 0; letter < row_3.length; letter++) {
@@ -222,4 +333,12 @@ function create_keyboard() {
     button.appendChild(img);
     img.src = "/static/images/delete_key_v2.svg";
     button.onclick = _remove_letter;
+}
+function _victory(json_data) {
+    for (var i = 0; i < json_data.length; i++) {
+        if (json_data[i] != 2) {
+            return;
+        }
+    }
+    window.location.href = "/";
 }

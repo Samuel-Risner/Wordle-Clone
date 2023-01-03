@@ -21,6 +21,18 @@ table {
     padding: 0px; */
 }
 
+.letter.correct_position {
+    background-color: green;
+}
+
+.letter.occurs_in_word {
+    background-color: yellowgreen;
+}
+
+.letter.does_not_occur_in_game {
+    background-color: gray;
+}
+
 /* Position and size for the div which contains the keyboard keys. */
 .keyboard {
     position: absolute;

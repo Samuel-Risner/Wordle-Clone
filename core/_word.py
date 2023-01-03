@@ -27,6 +27,9 @@ class Word():
             -1 -> length of `word_test` doean't match the length of `word_og`
             -2 -> there is an invalid letter in `word_test`
             -3 -> word does not exist / is not in word list
+            (-4 -> word_id wasn't found) 
+            (-5 -> user_id doesn't correspond to word)
+            (-6 -> game over)
 
         Meaning of numbers in returned list:
         ====================================
@@ -45,7 +48,7 @@ class Word():
                 return -2, None
         
         # if the word exists or not
-        if not self.word_loader.word_exists(word_test, len(word_og), self.language):
+        if not self.word_loader.word_exists(word_test, len(word_og), self.language, False):
             return -3, None
 
         # create the list for returning to the user
@@ -53,7 +56,7 @@ class Word():
         for _ in word_og:
             return_list.append(0)
         
-        # do optin 2
+        # do option 2
         word_ = ""       # "word_og", except that characters that had an exact match were replaced with a "."
         characters_ = "" # "word_test", except that characters that had an exact match were replaced with a "#"
 
@@ -75,31 +78,40 @@ class Word():
 
         return 0, return_list
 
-    def add_try(self, word_test: str):
+    def add_try(self, word_test: str) -> tuple[int, list[int] | None]:
+        # game is over
+        if self.remaining_tries <= 0:
+            print("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo")
+            return -6 , None
+        
+        self.remaining_tries -= 1
+
         success, result = self._do_try(word_test, self.word)
 
-        self.remaining_tries -= 1
+        # if an error occured during comparing
+        # no try is lost
+        if success < 0:
+            self.remaining_tries += 1
+            return success, result
+        
+        # save the try
+        self.try_results.append([word_test, result])
 
         words_match = True
         for character_match in result:
             if character_match != 2:
                 words_match = False
                 break
-        
-        # an error occured
-        if success < 0:
-            return success, result
-        
 
-        self.try_results.append([word_test, result])
-
-        # words match and game over
+        # words match
+        # game is then finished
         if words_match:
+            self.remaining_tries = -1
             return 1, result
 
-        # words do not match / match partially and game over
+        # this is the last try
         if self.remaining_tries <= 0:
             return 2, result
-
+            
         # words match partially            
         return success, result

@@ -8,7 +8,7 @@ from flask_login import login_user, login_required, logout_user
 from flask_login import current_user
 
 from changable_settings import PORT, HOST
-from core.checks import check_game_id
+from core.checks import check_game_id, check_word_characters
 from core.create_db import create_database
 from core.db_models import User as MODEL_USER
 from core.hash_functions import check_if_password_matches, generate_password_hash
@@ -33,7 +33,6 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    word_handler.add_user(int(user_id))
     return MODEL_USER.query.get(int(user_id))
 
 # create cutom error pages
@@ -46,21 +45,31 @@ for error_num in settings.errors.SUPPORTED_ERROR_PAGES:
 @login_required
 def get_progress(game_id: str):
     if not check_game_id(game_id):
-        return Response(json.dumps([None]), mimetype="application/json")
+        return settings.words.DEFAULT_JSON_RESPONSE
     
     progress = word_handler.get_word_progress(current_user.id, game_id)
     
     if progress is None:
-        json_data = json.dumps([None])
-    else:
-        json_data = json.dumps(progress)
+        return settings.words.DEFAULT_JSON_RESPONSE
     
-    return Response(json_data, mimetype="application/json")
+    return Response(json.dumps(progress), mimetype="application/json")
 
-# @app.route("/jj")
-# def route1():
-#     dict1 = [["BAUM", [9, 9, 9, 9, 9]], ["HUND", [9, 9, 9, 9, 9]], ["BRAUN", [9, 9, 9, 9, 9]], ["BAUM", [9, 9, 9, 9, 9]]]
-#     return Response(json.dumps(dict1), mimetype='application/json')
+@app.route("/json/add_word/<game_id>/<word>")
+@login_required
+def add_word(game_id: str, word: str):
+    if (not check_game_id(game_id)) or (not check_word_characters(word)):
+        return settings.words.DEFAULT_JSON_RESPONSE
+    
+    success, result = word_handler.do_try(current_user.id, game_id, word)
+
+    # defeat or victory / game over
+    if success in (1, 2, -6):
+        word_handler.remove_word(current_user.id, game_id)
+    
+    if (success >= 0):
+        return Response(json.dumps(result), mimetype="application/json")
+        
+    return settings.words.DEFAULT_JSON_RESPONSE
 
 @app.route("/game/<game_id>")
 @login_required
@@ -190,7 +199,7 @@ def login():
             print(current_user.id)
             print(isinstance(current_user.id, int))
 
-            flash(f"Successfully logged in!.", category="success")
+            flash(f"Successfully logged in!", category="success")
             return (redirect(url_for("index")))
 
     return render_template("login.html")
@@ -198,15 +207,7 @@ def login():
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
-    if request.method == "POST":
-        logout_type = request.form.get("logout_type")
-
-        if logout_type not in ("soft", "hard"):
-            return redirect("error/400/logout", code=303)
-
-        if logout_type == "hard":
-            word_handler.remove_user(current_user.id)
-        
+    if request.method == "POST":        
         logout_user()
         return redirect(url_for("login"))
 
@@ -276,5 +277,5 @@ def error(num: str, origin: str):
         return render_template(f"error_pages/404.html"), 404
 
 if __name__ == "__main__":
-    # app.run(port=PORT, host=HOST)
-    app.run(debug=True, port=PORT, host=HOST)
+    app.run(port=PORT, host=HOST)
+    # app.run(debug=True, port=PORT, host=HOST)

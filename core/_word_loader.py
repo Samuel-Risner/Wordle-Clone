@@ -71,5 +71,15 @@ class WordLoader():
         
         return secrets.choice(length_set)
 
-    def word_exists(self, word: str, length: int, language: str) -> bool:
-        return True
+    def word_exists(self, word: str, length: int, language: str, default: bool) -> bool:
+        language_dict = self.words.get(language)
+
+        if language is None:
+            return default
+        
+        length_set = language_dict.get(length)
+
+        if length_set is None:
+            return default
+        
+        return word in length_set

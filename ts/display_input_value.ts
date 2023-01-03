@@ -13,6 +13,4 @@ function display_input_value(input_id: string, output_id: string): void{
     }
 
     output_element.textContent = input_element.value;
-
-    console.log("foo");
 }

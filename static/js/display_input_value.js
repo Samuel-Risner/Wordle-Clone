@@ -10,5 +10,4 @@ function display_input_value(input_id, output_id) {
         return;
     }
     output_element.textContent = input_element.value;
-    console.log("foo");
 }
