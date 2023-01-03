@@ -61,6 +61,9 @@ function create_keyboard(): void{
     cell.appendChild(div);
     var button: HTMLButtonElement = document.createElement("button");
     div.appendChild(button);
+    var img: HTMLImageElement = document.createElement("img");
+    button.appendChild(img);
+    img.src = "/static/images/enter_key.svg";
     
     for (var letter: number = 0; letter < row_3.length; letter++) {
         var cell: HTMLTableCellElement = document.createElement("td");

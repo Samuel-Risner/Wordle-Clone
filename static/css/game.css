@@ -83,3 +83,7 @@ table {
 .keyboard_contents.special_key div {
     width: 15vw;
 }
+
+.keyboard_contents.special_key img {
+    width: 90%;
+}

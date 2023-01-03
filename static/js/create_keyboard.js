@@ -48,6 +48,9 @@ function create_keyboard() {
     cell.appendChild(div);
     var button = document.createElement("button");
     div.appendChild(button);
+    var img = document.createElement("img");
+    button.appendChild(img);
+    img.src = "/static/images/enter_key.svg";
     for (var letter = 0; letter < row_3.length; letter++) {
         var cell = document.createElement("td");
         row.appendChild(cell);
