@@ -52,6 +52,15 @@ function create_keyboard(): void{
     keyboard_object.appendChild(table);
     var row: HTMLTableRowElement = document.createElement("tr");
     table.appendChild(row);
+
+    // Enter button
+    var cell: HTMLTableCellElement = document.createElement("td");
+    cell.className = "keyboard_contents special_key";
+    row.appendChild(cell);
+    var div: HTMLDivElement = document.createElement("div");
+    cell.appendChild(div);
+    var button: HTMLButtonElement = document.createElement("button");
+    div.appendChild(button);
     
     for (var letter: number = 0; letter < row_3.length; letter++) {
         var cell: HTMLTableCellElement = document.createElement("td");
@@ -63,4 +72,13 @@ function create_keyboard(): void{
 
         button.textContent = row_3.charAt(letter);
     }
+
+    // delete button
+    var cell: HTMLTableCellElement = document.createElement("td");
+    cell.className = "keyboard_contents special_key";
+    row.appendChild(cell);
+    var div: HTMLDivElement = document.createElement("div");
+    cell.appendChild(div);
+    var button: HTMLButtonElement = document.createElement("button");
+    div.appendChild(button);
 }
