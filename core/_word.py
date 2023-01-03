@@ -4,14 +4,18 @@ from ._word_loader import WordLoader
 
 class Word():
 
-    def __init__(self, word: str, username: str, amount_tries: int, word_loader:WordLoader, language: str):
+    def __init__(self, word: str, user_id: int, amount_tries: int, word_loader:WordLoader, language: str):
         self.word = word
-        self.username = username
+        self.user_id = user_id
         self.amount_tries = amount_tries
         self.word_loader = word_loader
         self.language = language
+        self.remaining_tries = amount_tries
 
         self.try_results = list()
+    
+    def get_progress(self) -> list[list[str, list[int]]]:
+        return self.try_results
     
     def _do_try(self, word_test: str, word_og: str) -> tuple[int, list[int] | None]:
         """
@@ -74,7 +78,7 @@ class Word():
     def add_try(self, word_test: str):
         success, result = self._do_try(word_test, self.word)
 
-        self.try_results -= 1
+        self.remaining_tries -= 1
 
         words_match = True
         for character_match in result:
@@ -86,12 +90,15 @@ class Word():
         if success < 0:
             return success, result
         
+
+        self.try_results.append([word_test, result])
+
         # words match and game over
         if words_match:
             return 1, result
 
         # words do not match / match partially and game over
-        if self.try_results <= 0:
+        if self.remaining_tries <= 0:
             return 2, result
 
         # words match partially            
