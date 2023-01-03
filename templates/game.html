@@ -11,12 +11,10 @@
     <div id="keyboard" class="keyboard keyboard_contents"><!-- Gets filled by javascript --></div>
 
     <script type="text/javascript" src="/static/js/game.js"></script>
-    <script type="text/javascript" src="/static/js/create_keyboard.js"></script>
     <script type="text/javascript">
         set_stuff("{{ game_id }}", "{{ amount_tries }}", "{{ word_length }}");
         init_game();
         set_progress();
-
         create_keyboard();
     </script>
 {% endblock %}
