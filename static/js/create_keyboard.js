@@ -68,4 +68,7 @@ function create_keyboard() {
     cell.appendChild(div);
     var button = document.createElement("button");
     div.appendChild(button);
+    var img = document.createElement("img");
+    button.appendChild(img);
+    img.src = "/static/images/delete_key_v2.svg";
 }
