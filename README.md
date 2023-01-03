@@ -25,3 +25,6 @@ work in progress
   ```
 
   Replace *Here goes you recret key!* with something more secure.
+# TODO
+ * create a better svg for the delete key
+ * create a better key for the enter key
