@@ -39,6 +39,8 @@ var amount_tries = 0;
 var word_length = 0;
 var current_try = 0;
 var letters = [];
+var current_letter = [0, 0];
+var current_word = "";
 function set_stuff(new_game_id, new_amount_tries, new_word_length) {
     game_id = new_game_id;
     amount_tries = Number(new_amount_tries);
@@ -56,16 +58,29 @@ function init_game() {
     for (var h = 0; h < amount_tries; h++) {
         var tr = document.createElement("tr");
         table.appendChild(tr);
+        letters.push([]);
         for (var w = 0; w < word_length; w++) {
             var td = document.createElement("td");
             tr.appendChild(td);
             var div = document.createElement("div");
             td.appendChild(div);
-            div.textContent = "" + w + "|" + h;
+            div.textContent = ""; // + w + "|" + h;
             div.style.width = String(cell_width) + "vw";
             div.className = "letter";
+            letters[h].push(div);
         }
     }
+}
+function _set_current_letter() {
+    for (var h = 0; h < letters.length; h++) {
+        for (var w = 0; w < letters[h].length; w++) {
+            if (letters[h][w].textContent != "") {
+                current_letter = [w, h];
+                return true;
+            }
+        }
+    }
+    return false;
 }
 function _get_progress_async() {
     return __awaiter(this, void 0, void 0, function () {
@@ -93,9 +108,27 @@ function _set_progress(json_data) {
             letters[line][letter].textContent = character + num;
         }
     }
+    _set_current_letter();
 }
 function set_progress() {
     _get_progress_async().then(function (_res) { console.log("SUPER!"); console.log(_res); _set_progress(_res); })["catch"](function (_res) { console.log("UPSI!"); console.log(_res); });
+}
+function _add_letter(letter) {
+    if (current_letter[0] >= word_length) {
+        return;
+    }
+    letters[current_letter[1]][current_letter[0]].textContent = letter;
+    current_letter[0] = current_letter[0] + 1;
+    current_word = current_word + letter;
+}
+function _remove_letter() {
+    if (current_letter[0] <= 0) {
+        return;
+    }
+    current_word = current_word.substring(0, current_word.length - 1);
+    current_letter[0] = current_letter[0] - 1;
+    letters[current_letter[1]][current_letter[0]].textContent = "";
+    console.log("REMOVE!");
 }
 function create_keyboard() {
     var keyboard_object = document.getElementById("keyboard");
@@ -111,28 +144,40 @@ function create_keyboard() {
     keyboard_object.appendChild(table);
     var row = document.createElement("tr");
     table.appendChild(row);
-    for (var letter = 0; letter < row_1.length; letter++) {
-        var cell = document.createElement("td");
+    var _loop_1 = function () {
+        cell = document.createElement("td");
         row.appendChild(cell);
-        var div = document.createElement("div");
+        div = document.createElement("div");
         cell.appendChild(div);
-        var button = document.createElement("button");
+        button = document.createElement("button");
         div.appendChild(button);
-        button.textContent = row_1.charAt(letter);
+        var letter_ = row_1.charAt(letter);
+        button.textContent = letter_;
+        button.onclick = function () { _add_letter(letter_); };
+    };
+    var cell, div, button;
+    for (var letter = 0; letter < row_1.length; letter++) {
+        _loop_1();
     }
     // row 2
     var table = document.createElement("table");
     keyboard_object.appendChild(table);
     var row = document.createElement("tr");
     table.appendChild(row);
-    for (var letter = 0; letter < row_2.length; letter++) {
-        var cell = document.createElement("td");
+    var _loop_2 = function () {
+        cell = document.createElement("td");
         row.appendChild(cell);
-        var div = document.createElement("div");
+        div = document.createElement("div");
         cell.appendChild(div);
-        var button = document.createElement("button");
+        button = document.createElement("button");
         div.appendChild(button);
-        button.textContent = row_2.charAt(letter);
+        var letter_ = row_2.charAt(letter);
+        button.textContent = letter_;
+        button.onclick = function () { _add_letter(letter_); };
+    };
+    var cell, div, button;
+    for (var letter = 0; letter < row_2.length; letter++) {
+        _loop_2();
     }
     // row 3
     var table = document.createElement("table");
@@ -150,14 +195,20 @@ function create_keyboard() {
     var img = document.createElement("img");
     button.appendChild(img);
     img.src = "/static/images/enter_key.svg";
-    for (var letter = 0; letter < row_3.length; letter++) {
-        var cell = document.createElement("td");
+    var _loop_3 = function () {
+        cell = document.createElement("td");
         row.appendChild(cell);
-        var div = document.createElement("div");
+        div = document.createElement("div");
         cell.appendChild(div);
-        var button = document.createElement("button");
+        button = document.createElement("button");
         div.appendChild(button);
-        button.textContent = row_3.charAt(letter);
+        var letter_ = row_3.charAt(letter);
+        button.textContent = letter_;
+        button.onclick = function () { _add_letter(letter_); };
+    };
+    var cell, div, button;
+    for (var letter = 0; letter < row_3.length; letter++) {
+        _loop_3();
     }
     // delete button
     var cell = document.createElement("td");
@@ -170,4 +221,5 @@ function create_keyboard() {
     var img = document.createElement("img");
     button.appendChild(img);
     img.src = "/static/images/delete_key_v2.svg";
+    button.onclick = _remove_letter;
 }
