@@ -1,8 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Victory{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
+
+    <h1>
+        Victory
+    </h1>
+
+    <p>
+        {{ word_to_guess }}
+    </p>
+
+    <p>
+        {{ available_tries }}
+    </p>
+
+    <p>
+        {{ used_tries }}
+    </p>
 
 {% endblock %}

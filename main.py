@@ -33,6 +33,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
+    print("//////////////////////////////////////////////////////////////////////////////////////////////")
     return MODEL_USER.query.get(int(user_id))
 
 # create cutom error pages
@@ -71,7 +72,26 @@ def add_word(game_id: str, word: str):
         
     return settings.words.DEFAULT_JSON_RESPONSE
 
-@app.route("/game/<game_id>")
+@app.route("/game/victory/<game_id>")
+@login_required
+def victory(game_id: str):
+    return render_template(
+        "victory.html",
+        word_to_guess="word_to_guess",
+        available_tries="available_tries",
+        used_tries="used_tries"
+    )
+
+@app.route("/game/victory/<game_id>")
+@login_required
+def defeat(game_id: str):
+    return render_template(
+        "defeat.html",
+        word_to_guess="word_to_guess",
+        available_tries="available_tries"
+    )
+
+@app.route("/game/play/<game_id>")
 @login_required
 def game(game_id: str):
     word = word_handler.get_word(current_user.id, game_id)
