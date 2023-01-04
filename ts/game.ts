@@ -321,8 +321,12 @@ function create_keyboard(): void{
 function _victory(json_data: number[]): void {
     for (var i: number = 0; i < json_data.length; i++) {
         if (json_data[i] != 2) {
+            if (current_try == amount_tries) {
+                window.location.href = "/game/result/" + game_id;
+            }
+            
             return;
         }
     }
-    window.location.href = "/";
+    window.location.href = "/game/result/" + game_id;
 }

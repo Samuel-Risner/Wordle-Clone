@@ -22,7 +22,7 @@ class WordHandler():
             for i in range(0, settings.LEN_UNIQUE_ID, 1):
                 the_id += secrets.choice(settings.UNIQUE_ID_CHARS)
             
-            if (the_id not in self.unique_ids) and (the_id not in self.finishes_words):
+            if (the_id not in self.unique_ids) and (the_id not in self.finished_words):
                 break
 
         return the_id
@@ -97,3 +97,14 @@ class WordHandler():
 
         self.finished_words.pop(game_id)
         return True
+    
+    def get_word_finished_info(self, user_id: int, game_id: str) -> tuple[bool, str, int, int] | None:
+        word: Word = self.finished_words.get(game_id)
+
+        if word is None:
+            return None
+        
+        if word.user_id != user_id:
+            return None
+        
+        return word.victory, word.word, word.amount_tries, word.remaining_tries

@@ -12,6 +12,7 @@ class Word():
         self.language = language
         self.remaining_tries = amount_tries
 
+        self.victory = False
         self.try_results = list()
     
     def get_progress(self) -> list[list[str, list[int]]]:
@@ -80,8 +81,8 @@ class Word():
 
     def add_try(self, word_test: str) -> tuple[int, list[int] | None]:
         # game is over
-        if self.remaining_tries <= 0:
-            print("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo")
+        if (self.remaining_tries <= 0) or self.victory:
+            # print("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo")
             return -6 , None
         
         self.remaining_tries -= 1
@@ -106,7 +107,8 @@ class Word():
         # words match
         # game is then finished
         if words_match:
-            self.remaining_tries = -1
+            self.victory = True
+            # self.remaining_tries = -1
             return 1, result
 
         # this is the last try

@@ -33,7 +33,6 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    print("//////////////////////////////////////////////////////////////////////////////////////////////")
     return MODEL_USER.query.get(int(user_id))
 
 # create cutom error pages
@@ -72,23 +71,27 @@ def add_word(game_id: str, word: str):
         
     return settings.words.DEFAULT_JSON_RESPONSE
 
-@app.route("/game/victory/<game_id>")
+@app.route("/game/result/<game_id>", methods=["GET", "POST"])
 @login_required
-def victory(game_id: str):
-    return render_template(
-        "victory.html",
-        word_to_guess="word_to_guess",
-        available_tries="available_tries",
-        used_tries="used_tries"
-    )
+def game_result(game_id: str):
+    if not check_game_id(game_id):
+        return ""
+    
+    if request.method == "POST":
+        word_handler.remove_word(current_user.id, game_id)
+        return redirect(url_for("index"))
+    
+    word_info = word_handler.get_word_finished_info(current_user.id, game_id)
 
-@app.route("/game/victory/<game_id>")
-@login_required
-def defeat(game_id: str):
+    if word_info is None:
+        return ""
+
     return render_template(
-        "defeat.html",
-        word_to_guess="word_to_guess",
-        available_tries="available_tries"
+        "result.html",
+        victory=word_info[0],
+        word_to_guess=word_info[1],
+        available_tries=word_info[2],
+        remaining_tries=word_info[3]
     )
 
 @app.route("/game/play/<game_id>")
@@ -297,5 +300,5 @@ def error(num: str, origin: str):
         return render_template(f"error_pages/404.html"), 404
 
 if __name__ == "__main__":
-    app.run(port=PORT, host=HOST)
-    # app.run(debug=True, port=PORT, host=HOST)
+    # app.run(port=PORT, host=HOST)
+    app.run(debug=True, port=PORT, host=HOST)

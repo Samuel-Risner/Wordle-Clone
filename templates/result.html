@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Victory{% endblock %}
+{% block title %}{{ victory }}{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
-
     <h1>
-        Victory
+        {{ victory }}
     </h1>
 
     <p>
@@ -21,4 +20,11 @@
         {{ used_tries }}
     </p>
 
+    <p>
+        {{ remaining_tries }}
+    </p>
+
+    <form method="post">
+        <button type="submit">Submit</button>
+    </form>
 {% endblock %}
