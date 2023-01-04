@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Error 404{% endblock %}
+{% block title %}Error 500{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <h1>Error 404</h1>
-
-    {{ test }}
+    <h1>Error 500</h1>
     <p>
-        Page not found.
+        An internal server error occured.
     </p>
     <p>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500">
             Look at what this means.
         </a>
     </p>

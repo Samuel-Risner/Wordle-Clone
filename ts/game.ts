@@ -48,6 +48,7 @@ function init_game(): void {
             
             div.textContent = ""; // + w + "|" + h;
             div.style.width = String(cell_width) + "vw";
+            div.style.fontSize = String(cell_width * 0.8) + "vw";
             div.className = "letter";
 
             letters[h].push(div);
@@ -206,6 +207,10 @@ function _evaluate_submit_result(json_data: number[] | null): void {
 }
 
 function _enter(): void {
+    if (current_word.length != word_length) {
+        return;
+    }
+
     _get_word_result().then(
         (_res) => {console.log("SUPER!"); console.log(_res); _evaluate_submit_result(_res);}
     ).catch(
@@ -324,7 +329,7 @@ function _victory(json_data: number[]): void {
             if (current_try == amount_tries) {
                 window.location.href = "/game/result/" + game_id;
             }
-            
+
             return;
         }
     }

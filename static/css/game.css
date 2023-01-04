@@ -6,19 +6,19 @@ table {
 
 /* For the div in which the letters are entered.*/
 .letter_container {
-    height: 61vh;
+    height: 50vh;
     overflow-y: scroll;
 }
 
 /* Where the letters are entered. */
 .letter {
-    background-color: red;
+    background-color: rgba(211, 211, 211, 0.411);
 
     aspect-ratio: 1 / 1;
 
-    /* border: 0px;
+    border: opx;
     margin: 0px;
-    padding: 0px; */
+    padding: 0vw;
 }
 
 .letter.correct_position {
@@ -26,11 +26,11 @@ table {
 }
 
 .letter.occurs_in_word {
-    background-color: yellowgreen;
+    background-color: rgb(243, 221, 18);
 }
 
 .letter.does_not_occur_in_game {
-    background-color: gray;
+    background-color: rgb(192, 192, 192);
 }
 
 /* Position and size for the div which contains the keyboard keys. */
@@ -39,7 +39,9 @@ table {
     bottom: 0;
 
     width: 100vw;
-    height: 39vh;
+    height: 27vh;
+
+    display: table-footer-group;
 }
 
 /* 
@@ -48,6 +50,8 @@ table {
 
 .keyboard_contents button {
     background-color: rgb(0, 0, 0, 0);
+
+    color: rgb(0, 0, 0);
 
     width: 95%;
     height: 95%;
@@ -67,7 +71,7 @@ table {
 
 .keyboard_contents div {
     width: 10vw;
-    height: 13vh;
+    height: 9vh;
 
     font-size: 10vw;
 }

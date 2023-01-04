@@ -75,6 +75,7 @@ function init_game() {
             td.appendChild(div);
             div.textContent = ""; // + w + "|" + h;
             div.style.width = String(cell_width) + "vw";
+            div.style.fontSize = String(cell_width * 0.8) + "vw";
             div.className = "letter";
             letters[h].push(div);
         }
@@ -232,6 +233,9 @@ function _evaluate_submit_result(json_data) {
     _victory(json_data);
 }
 function _enter() {
+    if (current_word.length != word_length) {
+        return;
+    }
     _get_word_result().then(function (_res) { console.log("SUPER!"); console.log(_res); _evaluate_submit_result(_res); })["catch"](function (_res) { console.log("UPSI!"); console.log(_res); });
 }
 /**

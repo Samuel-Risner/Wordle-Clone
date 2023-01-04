@@ -1,30 +1,67 @@
 {% extends "base.html" %}
 
-{% block title %}{{ victory }}{% endblock %}
+{% block title %}
+    {% if victory %}
+        Victory
+    {% else %}
+        Defeat
+    {% endif %}
+{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <h1>
-        {{ victory }}
-    </h1>
+    <link rel="stylesheet" href="/static/css/select_game_stuff.css">
 
-    <p>
-        {{ word_to_guess }}
-    </p>
-
-    <p>
-        {{ available_tries }}
-    </p>
-
-    <p>
-        {{ used_tries }}
-    </p>
-
-    <p>
-        {{ remaining_tries }}
-    </p>
-
-    <form method="post">
-        <button type="submit">Submit</button>
-    </form>
+    <table>
+        <tr>
+            <td>
+                <h1>
+                    {% if victory %}
+                        Victory!
+                    {% else %}
+                        Defeat!
+                    {% endif %}
+                </h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                The word you had to guess:
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ word_to_guess }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                How many tries you had to guess the word:
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ available_tries }}
+            </td>
+        </tr>
+        {% if victory %}
+            <tr>
+                <td>
+                    How many tries remained:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ remaining_tries }}
+                </td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td>
+                <form method="post">
+                    <button type="submit">Submit</button>
+                </form>
+            </td>
+        </tr>
+    </table>    
 {% endblock %}

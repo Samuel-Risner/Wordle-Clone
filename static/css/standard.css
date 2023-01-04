@@ -1,4 +1,6 @@
 body {
     /* for firefox desktop */
     margin: 0px;
+    /* prevents zoom on double click (on moile), when using the keyboard */
+    touch-action: manipulation;
 }
