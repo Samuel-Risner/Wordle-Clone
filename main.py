@@ -65,7 +65,7 @@ def add_word(game_id: str, word: str):
 
     # defeat or victory / game over
     if success in (1, 2, -6):
-        word_handler.remove_word(current_user.id, game_id)
+        word_handler.finish_word(current_user.id, game_id)
     
     if (success >= 0):
         return Response(json.dumps(result), mimetype="application/json")

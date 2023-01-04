@@ -10,6 +10,10 @@ class WordHandler():
     def __init__(self):
         self.word_loader = WordLoader()
         self.unique_ids = dict()
+        self.finished_words = dict()
+
+        self.unique_ids.setdefault(None)
+        self.finished_words.setdefault(None)
     
     def _create_unique_id(self) -> str:
         while True:
@@ -18,7 +22,7 @@ class WordHandler():
             for i in range(0, settings.LEN_UNIQUE_ID, 1):
                 the_id += secrets.choice(settings.UNIQUE_ID_CHARS)
             
-            if the_id not in self.unique_ids:
+            if (the_id not in self.unique_ids) and (the_id not in self.finishes_words):
                 break
 
         return the_id
@@ -64,9 +68,32 @@ class WordHandler():
             return -5, None
         
         return word.add_try(word_test)
-
-    def remove_word(self, user_id: int, game_id: str):
+    
+    def finish_word(self, user_id: int, game_id: str) -> bool:
         word: Word = self.unique_ids.get(game_id)
 
-        if word is not None:
-            self.unique_ids.pop(game_id)
+        if word is None:
+            return False
+
+        if word.user_id != user_id:
+            return False
+
+        word = self.unique_ids.pop(game_id)
+
+        if word is None:
+            return False
+        
+        self.finished_words[game_id] = word
+        return True
+
+    def remove_word(self, user_id: int, game_id: str) -> bool:
+        word: Word = self.finished_words.get(game_id)
+
+        if word is None:
+            return False
+
+        if word.user_id != user_id:
+            return False
+
+        self.finished_words.pop(game_id)
+        return True
