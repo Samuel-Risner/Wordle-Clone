@@ -6,7 +6,7 @@ table {
 
 /* For the div in which the letters are entered.*/
 .letter_container {
-    height: 50vh;
+    height: 63vh;
     overflow-y: scroll;
 }
 
@@ -16,7 +16,7 @@ table {
 
     aspect-ratio: 1 / 1;
 
-    border: opx;
+    border: 0px;
     margin: 0px;
     padding: 0vw;
 }
@@ -35,7 +35,7 @@ table {
 
 /* Position and size for the div which contains the keyboard keys. */
 .keyboard {
-    position: absolute;
+    position: fixed;
     bottom: 0;
 
     width: 100vw;

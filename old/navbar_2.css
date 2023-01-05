@@ -1,8 +1,5 @@
 .navbar {
-    width: 100vw;
-    height: fit-content;
-
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
 
@@ -26,12 +23,12 @@
 .navbar.bg_clolour_hide {
     background-color: rgba(0, 0, 0, 0);
 
-    /* width: 0px;
+    width: 0px;
     height: 0px;
 
     margin: 0px;
     border: 0px;
-    padding: 0px; */
+    padding: 0px;
 }
 
 .hamburger button {
