@@ -7,7 +7,51 @@
     <title>{% block title %}Wordle-Clone{% endblock %}</title>
 </head>
 <body>
+    <link rel="stylesheet" href="/static/css/navbar.css">
     <link rel="stylesheet" href="/static/css/standard.css">
+    
+    <script type="text/javascript" src="/static/js/navbar.js"></script>
+
+    <div class="navbar">
+        <div class="navbar bg_clolour hide" id="navbar_bg_colour">
+            <div class="hamburger">
+                <button onclick="toggle_dropdown()">
+                    <img src="/static/images/hamburger_v2.svg">
+                </button>
+            </div>
+            <div id="dropdown" hidden>
+                {% if user %}
+                    {% if not user.is_authenticated %}
+                        <a href="/login">
+                            login
+                        </a>
+                        <br>
+                        <a href="/sign_up">
+                            sign up
+                        </a>
+                        <br>
+                    {% endif %}
+                {% endif %}
+                <a href="/">
+                    home
+                </a>
+                <br>
+                <a href="/game/choose_language">
+                    custom game
+                </a>
+                <br>
+                {% if user %}
+                    {% if user.is_authenticated %}
+                        <a href="/logout">
+                            logout
+                        </a>
+                        <br>
+                    {% endif %} 
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

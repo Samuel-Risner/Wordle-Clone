@@ -88,7 +88,8 @@ def game_result(game_id: str):
         victory=word_info[0],
         word_to_guess=word_info[1],
         available_tries=word_info[2],
-        remaining_tries=word_info[3]
+        remaining_tries=word_info[3],
+        user=current_user
     )
 
 @app.route("/game/play/<game_id>")
@@ -100,7 +101,13 @@ def game(game_id: str):
         print("foo")
         return render_error(404)
 
-    return render_template("game.html", game_id=game_id, amount_tries=word.amount_tries, word_length=len(word.word))
+    return render_template(
+        "game.html",
+        game_id=game_id,
+        amount_tries=word.amount_tries,
+        word_length=len(word.word),
+        user=current_user
+    )
 
 @app.route("/game/setup/<language>", methods=["GET", "POST"])
 @login_required
@@ -136,7 +143,8 @@ def select_game_size(language: str):
         min_word_length=settings.game.MIN_WORD_LEN,
         max_word_length=settings.game.MAX_WORD_LEN,
         min_tries=settings.game.MIN_TRIES,
-        max_tries=settings.game.MAX_TRIES
+        max_tries=settings.game.MAX_TRIES,
+        user=current_user
     )
 
 @app.route("/game/choose_language")
@@ -145,12 +153,13 @@ def select_game_language():
     return render_template(
         "select_game_language.html",
         languages=settings.game.SUPPORTED_LANGUAGES,
-        select_game_size_url=url_for("select_game_size", language="")
+        select_game_size_url=url_for("select_game_size", language=""),
+        user=current_user
     )
 
 @app.route("/")
 def index():    
-    return render_template("index.html")
+    return render_template("index.html", user=current_user)
 
 @app.route("/home")
 def home():
@@ -183,11 +192,11 @@ def login():
 
         if not username_check[0]:
             flash(username_check[1], category="error")
-            return render_template("login.html")
+            return render_template("login.html", user=current_user)
         
         if not password_check[0]:
             flash(password_check[1], category="error")
-            return render_template("login.html")
+            return render_template("login.html", user=current_user)
         
         # convert password and username from base 64 to plain text
         username = b64_decode(username)
@@ -206,14 +215,14 @@ def login():
         # if the user was not found in the database
         if user is None:
             flash(f"Username '{username}' does not exist.", category="error")
-            return render_template("login.html")
+            return render_template("login.html", user=current_user)
         
         # check if the passwords match
         passwords_match = check_if_password_matches(password, user.password_hash, user.salt)
 
         if not passwords_match:
             flash(f"Password is incorrect.", category="error")
-            return render_template("login.html")
+            return render_template("login.html", user=current_user)
         else:
             login_user(user, remember=settings.auth.REMEMBER_USER)
 
@@ -221,9 +230,9 @@ def login():
             print(isinstance(current_user.id, int))
 
             flash(f"Successfully logged in!", category="success")
-            return (redirect(url_for("index")))
+            return redirect(url_for("index"))
 
-    return render_template("login.html")
+    return render_template("login.html", user=current_user)
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
@@ -231,6 +240,8 @@ def logout():
     if request.method == "POST":        
         logout_user()
         return redirect(url_for("login"))
+    
+    return render_template("logout.html", user=current_user)
 
 @app.route("/sign_up", methods=["GET", "POST"])
 def sign_up():
@@ -247,7 +258,7 @@ def sign_up():
         # if the two passwords match
         if password != confirm_password:
             flash("Passwords do not match.", category="error")
-            return render_template("sign_up.html")
+            return render_template("sign_up.html", user=current_user)
         
         # check if they have correct formatting
         username_check = validate_username(username)
@@ -255,11 +266,11 @@ def sign_up():
 
         if not username_check[0]:
             flash(username_check[1], category="error")
-            return render_template("sign_up.html")
+            return render_template("sign_up.html", user=current_user)
         
         if not password_check[0]:
             flash(password_check[1], category="error")
-            return render_template("sign_up.html")
+            return render_template("sign_up.html", user=current_user)
 
         # convert password and username from base 64 to plain text
         username = b64_decode(username)
@@ -276,7 +287,7 @@ def sign_up():
         user = MODEL_USER.query.filter_by(username=username).first()
         if user is not None:
             flash("Username already exists!", category="error")
-            return render_template("sign_up.html")
+            return render_template("sign_up.html", user=current_user)
 
         # create new user
         password_hash, salt = generate_password_hash(password)
@@ -288,7 +299,7 @@ def sign_up():
         flash("Account created! And logged in!", category="success")
         return (redirect(url_for("index")))
 
-    return render_template("sign_up.html")
+    return render_template("sign_up.html", user=current_user)
 
 if __name__ == "__main__":
     # app.run(port=PORT, host=HOST)

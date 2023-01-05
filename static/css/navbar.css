@@ -1,0 +1,47 @@
+.navbar {
+    width: 100%;
+
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    /* float: left; */
+}
+
+.navbar a {
+    text-decoration: none;
+    color: rgb(230, 222, 222);
+    padding: 10px;
+    font-size: larger;
+}
+
+.navbar.bg_clolour_show {
+    background-color: black;
+}
+
+.navbar.bg_clolour_hide {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.hamburger button {
+    background-color: rgba(0, 0, 0, 0);
+
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.hamburger img {
+    width: 10vw;
+    /* opacity: 0.08; */
+}
+
+/* #dropdown {
+    padding: 10px;
+    background-color: aqua;
+    font-size: larger;
+    color: rgb(230, 222, 222);
+} */

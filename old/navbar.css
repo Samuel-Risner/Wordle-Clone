@@ -1,0 +1,17 @@
+.navbar {
+    background-color: rebeccapurple;
+
+    /* width: 100vw; */
+
+    font-size: larger;
+
+    position: sticky;
+    top: 0px;
+    left: 0px;
+
+    padding: 5px;
+}
+
+.navbar option {
+    background-color: aqua;
+}
