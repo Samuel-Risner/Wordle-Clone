@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Active games{% endblock %}
+{% block language %}en{% endblock %}
+
+{% block content %}
+    <div>
+        {% if active_games %}
+            {% for game in active_games %}
+                <div>
+                    <a href="/game/play/{{ game }}">
+                        {{ game }}
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -32,11 +32,11 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
+init_error_pages(app)
+
 @login_manager.user_loader
 def load_user(user_id):
     return MODEL_USER.query.get(int(user_id))
-
-init_error_pages(app)
 
 @app.route("/json/get_progress/<game_id>", methods=["POST", "GET"])
 @login_required
@@ -68,18 +68,15 @@ def add_word(game_id: str, word: str):
         
     return settings.words.DEFAULT_JSON_RESPONSE
 
-@app.route("/game/result/<game_id>", methods=["GET", "POST"])
+@app.route("/game/result/<game_id>")
 @login_required
 def game_result(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
     
-    if request.method == "POST":
-        word_handler.remove_word(current_user.id, game_id)
-        return redirect(url_for("index"))
-    
     word_info = word_handler.get_word_finished_info(current_user.id, game_id)
-
+    word_handler.remove_word(current_user.id, game_id)
+    
     if word_info is None:
         return render_error(400)
 
@@ -156,6 +153,12 @@ def select_game_language():
         select_game_size_url=url_for("select_game_size", language=""),
         user=current_user
     )
+
+@app.route("/active_games")
+@login_required
+def active_games():
+    games = word_handler.get_active_games(current_user.id)
+    return render_template("active_games.html", active_games=games, user=current_user)
 
 @app.route("/")
 def index():    

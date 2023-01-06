@@ -10,5 +10,5 @@ def create_database(app:Flask):
     if not path.exists(settings.db.PATH):
         with app.app_context():
             settings.db.DB.create_all()
-        # settings.db.DB.create_all(app=app)
+            
         print('Created Database!')

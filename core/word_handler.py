@@ -11,6 +11,7 @@ class WordHandler():
         self.word_loader = WordLoader()
         self.unique_ids = dict()
         self.finished_words = dict()
+        self.users = dict()
 
         self.unique_ids.setdefault(None)
         self.finished_words.setdefault(None)
@@ -33,6 +34,11 @@ class WordHandler():
         word_object = Word(word, user_id, amount_tries, self.word_loader, language)
 
         self.unique_ids[unique_id] = word_object
+
+        if user_id in self.users:
+            self.users[user_id].append(unique_id)
+        else:
+            self.users[user_id] = [unique_id]
 
         return unique_id
     
@@ -96,6 +102,7 @@ class WordHandler():
             return False
 
         self.finished_words.pop(game_id)
+        self.users[user_id].remove(game_id)
         return True
     
     def get_word_finished_info(self, user_id: int, game_id: str) -> tuple[bool, str, int, int] | None:
@@ -108,3 +115,11 @@ class WordHandler():
             return None
         
         return word.victory, word.word, word.amount_tries, word.remaining_tries
+    
+    def get_active_games(self, user_id: int) -> list[str] | None:
+        user = self.users.get(user_id)
+
+        if user is None:
+            return None
+        
+        return user
