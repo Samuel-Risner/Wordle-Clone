@@ -15,6 +15,7 @@ class WordHandler():
 
         self.unique_ids.setdefault(None)
         self.finished_words.setdefault(None)
+        self.users.setdefault(None)
     
     def _create_unique_id(self) -> str:
         while True:
@@ -116,10 +117,33 @@ class WordHandler():
         
         return word.victory, word.word, word.amount_tries, word.remaining_tries
     
-    def get_active_games(self, user_id: int) -> list[str] | None:
+    def get_active_games(self, user_id: int) -> list[list[str, str, int, int, int]] | None:
+        """
+        Returns:
+            game_id
+            language
+            word_length
+            amount_tries
+            remaining_tries
+        """
         user = self.users.get(user_id)
 
         if user is None:
             return None
         
+        to_return = list
+        for game_id in user:
+            to_return.append(game_id)
+
+            game: Word = self.unique_ids.get(game_id)
+
+            if game is None:
+                to_return.pop()
+                continue
+
+            to_return.append(game.language)
+            to_return.append(len(game.word))
+            to_return.append(game.amount_tries)
+            to_return.append(game.remaining_tries)
+
         return user

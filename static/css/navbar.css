@@ -12,14 +12,14 @@
 .navbar a {
     text-decoration: none;
     color: rgb(230, 222, 222);
-    /* padding: 10px; */
     font-size: x-large;
 }
 
+/* has desktop */
 .navbar.bg_clolour_show {
     background-color: black;
 
-    width: 75%;
+    width: 75vw;
     height: 100vh;
 }
 
@@ -35,10 +35,17 @@
     border: 0px;
 }
 
+/* has desktop */
 .hamburger img {
     width: 12vw;
 }
 
 #dropdown {
     padding-left: 15px;
+}
+
+/* for desktop */
+@media only screen and (min-width: 768px) {
+    .navbar.bg_clolour_show {width: 25vw;}
+    .hamburger img {width: 4vw;}
 }

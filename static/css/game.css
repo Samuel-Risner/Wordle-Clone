@@ -4,6 +4,7 @@ table {
     margin: auto;
 }
 
+/* has desktop */
 /* For the div in which the letters are entered.*/
 .letter_container {
     height: 63vh;
@@ -33,6 +34,7 @@ table {
     background-color: rgb(192, 192, 192);
 }
 
+/* has desktop */
 /* Position and size for the div which contains the keyboard keys. */
 .keyboard {
     position: fixed;
@@ -102,4 +104,15 @@ table {
 
 .keyboard_contents.special_key img {
     width: 90%;
+}
+
+/* for desktop */
+@media only screen and (min-width: 768px) {
+    .keyboard {
+        width: 0px;
+        height: 0px;
+    }
+    .letter_container {
+        height: auto;
+    }
 }

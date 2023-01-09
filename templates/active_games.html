@@ -5,14 +5,34 @@
 
 {% block content %}
     <div>
-        {% if active_games %}
-            {% for game in active_games %}
-                <div>
-                    <a href="/game/play/{{ game }}">
-                        {{ game }}
-                    </a>
-                </div>
-            {% endfor %}
-        {% endif %}
+        <table>
+            <tr>
+                <th>Test</th>
+            </tr>
+            
+            {% if active_games %}
+                {% for game_id, language, word_length, amount_tries, remaining_tries in active_games %}
+                    <tr>
+                        <td>
+                            <a href="/game/play/{{ game }}">
+                                {{ game }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ language }}
+                        </td>
+                        <td>
+                            {{ word_length }}
+                        </td>
+                        <td>
+                            {{ amount_tries }}
+                        </td>
+                        <td>
+                            {{ remaining_tries }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
     </div>
 {% endblock %}

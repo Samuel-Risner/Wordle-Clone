@@ -1,3 +1,4 @@
+/* has desktop */
 table {
     margin: 0;
     position: absolute;
@@ -15,9 +16,24 @@ table {
     background-color: rgb(229, 248, 255);
 }
 
-button {
+/* has desktop */
+.submit_button {
     border: 0px;
     border-radius: 0px;
 
     font-size: 10vw;
+}
+
+/* for desktop */
+@media only screen and (min-width: 768px) {
+    table {
+        font-size: 2vw;
+    }
+
+    .submit_button {
+        font-size: x-large;
+        border: 10px;
+        border-radius: 0px;
+        background-color: #3e65ca;
+    }
 }
