@@ -158,6 +158,7 @@ def select_game_language():
 @login_required
 def active_games():
     games = word_handler.get_active_games(current_user.id)
+    print(games)
     return render_template("active_games.html", active_games=games, user=current_user)
 
 @app.route("/")

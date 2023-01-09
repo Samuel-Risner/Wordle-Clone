@@ -131,9 +131,10 @@ class WordHandler():
         if user is None:
             return None
         
-        to_return = list
+        to_return = list()
         for game_id in user:
-            to_return.append(game_id)
+            to_return.append(list())
+            to_return[-1].append(game_id)
 
             game: Word = self.unique_ids.get(game_id)
 
@@ -141,9 +142,9 @@ class WordHandler():
                 to_return.pop()
                 continue
 
-            to_return.append(game.language)
-            to_return.append(len(game.word))
-            to_return.append(game.amount_tries)
-            to_return.append(game.remaining_tries)
+            to_return[-1].append(game.language)
+            to_return[-1].append(len(game.word))
+            to_return[-1].append(game.amount_tries)
+            to_return[-1].append(game.remaining_tries)
 
-        return user
+        return to_return

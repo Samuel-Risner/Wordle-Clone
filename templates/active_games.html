@@ -7,15 +7,19 @@
     <div>
         <table>
             <tr>
-                <th>Test</th>
+                <th>Game id</th>
+                <th>Language</th>
+                <th>Word length</th>
+                <th>Amount of tries</th>
+                <th>Tries remaining</th>
             </tr>
             
             {% if active_games %}
                 {% for game_id, language, word_length, amount_tries, remaining_tries in active_games %}
                     <tr>
                         <td>
-                            <a href="/game/play/{{ game }}">
-                                {{ game }}
+                            <a href="/game/play/{{ game_id }}">
+                                {{ game_id }}
                             </a>
                         </td>
                         <td>
