@@ -63,6 +63,7 @@ def add_word(game_id: str, word: str):
     if success in (1, 2, -6):
         word_handler.finish_word(current_user.id, game_id)
     
+    # no error occured
     if (success >= 0):
         return Response(json.dumps(result), mimetype="application/json")
         
@@ -92,10 +93,12 @@ def game_result(game_id: str):
 @app.route("/game/play/<game_id>")
 @login_required
 def game(game_id: str):
+    if not check_game_id(game_id):
+        return render_error(404)
+
     word = word_handler.get_word(current_user.id, game_id)
 
     if word is None:
-        print("foo")
         return render_error(404)
 
     return render_template(
