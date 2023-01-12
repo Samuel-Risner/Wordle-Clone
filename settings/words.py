@@ -9,6 +9,8 @@ WORD_VALID_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 DEFAULT_JSON_RESPONSE = Response(json.dumps(None), mimetype="application/json")
 
+PATH_TO_WORD_TOML_FILE = "words.toml"
+
 LANGUAGES = {
     "en": [
         [

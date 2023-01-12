@@ -2,8 +2,7 @@
 # ---------------------------------------------------- Schematic: ---------------------------------------------------- #
 # ==================================================================================================================== #
 
-# Abbreviation for the language, if there are multiple implementations of an abbreviation the older ones are
-# overwritten by the newer ones.
+# Abbreviation for the language, each abbreviation may only be implemented once.
 # Examples:
 #   [en]
 #   [de]
@@ -46,7 +45,6 @@ words = [
     "words/de/len_6.dic",
     "words/de/len_7.dic",
     "words/de/len_8.dic",
-    "does_not_exist.test"
 ]
 min_word_length = 4
 max_word_length = -1

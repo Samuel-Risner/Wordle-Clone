@@ -5,71 +5,145 @@ try:
 except ModuleNotFoundError:
     import toml
 
-from settings import words as WORDS
+from settings.words import PATH_TO_WORD_TOML_FILE, WORD_VALID_LETTERS
 
 class WordLoader():
+    """Loads the words corresponding to language and length and is able to check if a certain word of a certain length
+    and language was loaded and to return a random word of a certain language and length."""
 
     def __init__(self):
-        self.words: dict[str, tuple[str, int, int]] = dict()
+        self.words: dict[str, tuple[dict[int, list], list[int]]] = dict()
+        """
+        Key:
+        
+            Abbreiviation for the language.
+
+        Value:
+
+            - A dictionary consisting of an integer which represents the length of the words in the list.
+            - A list containing all the word lengths.
+        """
 
         self._load()
     
     def _load(self):
-        def check_characters(word: str) -> bool:
+        """Loads all words."""
+
+        def check_word(word: str, min_length: int, max_length: int) -> bool:
+            """Check if the word only contains valid characters, is long enough and isn't to short. If all checks are
+            passed `True` is returned, otherwise `False` is returned."""
+
+            # Check if all characters are valid.
             for character in word:
-                if character not in WORDS.WORD_VALID_LETTERS:
+                if character not in WORD_VALID_LETTERS:
                     print(f"Word: '{word}' contains an invalid character: '{character}'.")
                     return False
+            
+            # Check if the word is long enough.
+            if min_length > 0:
+                if len(word) < min_length:
+                    print(f"Word: '{word}' is to short, minimum length: '{min_length}'.")
+                    return False
+            
+            # Check if the word isn't to long.
+            if max_length > 0:
+                if len(word) > max_length:
+                    print(f"Word: '{word}' is to long, maximum length: '{max_length}'.")
+                    return False
+
             return True
+        
+        # Load toml file contents.
+        with open(PATH_TO_WORD_TOML_FILE, "r") as d:
+            toml_stuff: dict[str, dict[str, list | int]] = toml.loads(d.read())
 
-        for language, next_ in WORDS.LANGUAGES.items():
-            # seperate the paths to the dictionarys and the permitted lengths for words
-            paths, word_lengths, _ = next_
+        # If the file wasn't loaded successfully.
+        if not isinstance(toml_stuff, dict):
+            print(f"Unable to load toml file: '{PATH_TO_WORD_TOML_FILE}' because no dictionary was returned.")
+            raise
+        
+        # Remove the schematic dictionary.
+        if "language" in toml_stuff:
+            toml_stuff.pop("language")
 
-            # create a set for each word length and add them to a dictionary
-            length_dict = dict()
-            for length in word_lengths:
-                length_dict[length] = set()
+        # Go through each language of the dictionary and load it.
+        for language, language_dict in toml_stuff.items():
+            # If the user commented something out, which they are allowed to for the minimum and maximum length.
+            language_dict.setdefault(None)
 
-            # create a dict for the language and add it to `self.words`
-            self.words[language] = length_dict
+            # The paths to the files containing the words. If there are no paths there is no use in continuing loading
+            # that language.
+            word_paths: list[str] = language_dict.get("words")
+            if word_paths is None:
+                print(f"The language '{language}' has no paths to files containing words.")
+                continue
             
-            # load the words from the paths
-            for path in paths:
-                # get the contents seperated into lines / words
-                with open(path, "r") as d:
-                    contents = d.read().split("\n")
-
-                # check each word
-                for word in contents:
-                    # check the length
-                    if len(word) not in word_lengths:
-                        print(f"Word: '{word}' is not long enough (only words with lengths in {word_lengths}).")
-                        continue
-
-                    # convert the words to all caps
-                    word = word.upper()
-
-                    # check the character
-                    if not check_characters(word):
-                        continue
-
-                    # add word
-                    length_dict[len(word)].add(word)
+            # Get the minimum word length, the default is -1.
+            min_word_length: int = language_dict.get("min_word_length")
+            if min_word_length is None:
+                min_word_length = -1
             
-            # convert the sets to lists
-            for length in word_lengths:
-                self.words[language][length] = list(self.words[language][length])
+            # Get the maximum word length, the default is -1.
+            max_word_length: int = language_dict.get("max_word_length")
+            if max_word_length is None:
+                max_word_length = -1
+            
+            # For all the words the language will have.
+            all_words: list[str] = list()
 
-        print(self.words)
+            # Load the words from the files.
+            for word_path in word_paths:
+                with open(word_path, "r") as d:
+                    contents = d.read()
+                
+                contents = contents.split("\n")
+
+                empty_lines = list()
+                for line in contents:
+                    if line == "": empty_lines.append(line)
+                for line in empty_lines: contents.remove(line)
+
+                all_words.extend(contents)
+            
+            # Convert "all_words" to a set and back again to prevent words from occuring twice.
+            all_words = set(all_words)
+            all_words = list(all_words)
+
+            # All the words are saved there in lists, according to their lengths.
+            new_language_dict: dict[int, list] = dict()
+            # Contains all the lengths of the loaded words, basically the keys from "new_language_dict".
+            word_lengths: list[int] = list()
+
+            # Checks all words and adds them to "new_language_dict".
+            for word in all_words:
+                # Convert the word to all uppercase.
+                word = word.upper()
+
+                # Check if the word meets the requirements concerning valid characters and maximum and minimum length.
+                # And adds the word to "new_language_dict" and the length of the word to "word_lengths".
+                if check_word(word, min_word_length, max_word_length):
+                    length = len(word)
+                    if length in word_lengths:
+                        new_language_dict[length].append(word)
+                    else:
+                        word_lengths.append(length)
+                        new_language_dict[length] = [word]
+            
+            # Add the language to the class attribute.
+            self.words[language] = (new_language_dict, word_lengths)
+
+            print(self.words)
     
     def get_random_word(self, length: int, language: str) -> str | None:
+        """Returns a random word from the language `language` with the length `length`. If the language does not exist
+        or there are no words with the corresponding length `None` is returned."""
+
         language_dict = self.words.get(language)
 
         if language is None:
             return None
         
-        length_set = language_dict.get(length)
+        length_set = language_dict[0].get(length)
 
         if length_set is None:
             return None
@@ -77,12 +151,16 @@ class WordLoader():
         return secrets.choice(length_set)
 
     def word_exists(self, word: str, length: int, language: str, default: bool) -> bool:
+        """Checks if a word `word` from the language `language` and with the length `length` was loaded. If the language
+        or the passed length do not exist the passed parameter `default` is returned. Otherwise `True` if the word was
+        loaded or `False` if it was not."""
+
         language_dict = self.words.get(language)
 
         if language is None:
             return default
         
-        length_set = language_dict.get(length)
+        length_set = language_dict[0].get(length)
 
         if length_set is None:
             return default
