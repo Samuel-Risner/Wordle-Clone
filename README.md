@@ -15,7 +15,7 @@ work in progress
  In either case you want to make sure that your firewall allows hosting on your IPv4 address.
 # More setup
  ## Server key
-  Create the directory *secrets*. Create the file *secret.json* in the directory.
+  Create the file *secret.json* in the current directory.
 
   Write the following code to the file:
   ```json
