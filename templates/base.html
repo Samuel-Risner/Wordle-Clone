@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/static/css/standard.css">
     
     <script type="text/javascript" src="/static/js/navbar.js"></script>
+    <script type="text/javascript" src="/static/js/remove_element.js"></script>
 
     <div class="navbar">
         <div class="navbar bg_clolour_hide" id="navbar_bg_colour">
@@ -59,22 +60,21 @@
             </div>
         </div>
     </div>
-    
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
                 {% if category == "error" %}
-                    <div>
+                    <div id="{{ loop.index }}">
                         {{ message }}
-                        <button></button>
+                        <button onclick="remove_element('{{ loop.index }}')">
                             <span>&times;</span>
                         </button>
                     </div>
                 {% else %}
-                    <div>
+                    <div id="{{ loop.index }}">
                         {{ message }}
-                        <button>
+                        <button onclick="remove_element('{{ loop.index }}')">
                             <span>&times;</span>
                         </button>
                     </div>

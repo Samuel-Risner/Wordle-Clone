@@ -175,7 +175,7 @@ def unviewed_scores():
     )
 
 @app.route("/")
-def index():    
+def index():
     return render_template("index.html", user=current_user)
 
 @app.route("/home")

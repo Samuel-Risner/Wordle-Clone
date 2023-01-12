@@ -30,7 +30,7 @@ work in progress
  - [ ] Create a better svg for the enter key
  - [ ] Make the device keyboard usable for desktop
  - [ ] Create a button to show and hide the built in keyboard for desktop
- - [ ] Make flashed messages removable
+ - [x] Make flashed messages removable
  - [ ] Add css for flashed messages
  - [ ] Combine "settings/game.py" and "settings.words.py"
  - [ ] Add more words
