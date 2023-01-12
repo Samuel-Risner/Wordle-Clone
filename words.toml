@@ -1,0 +1,56 @@
+# ==================================================================================================================== #
+# ---------------------------------------------------- Schematic: ---------------------------------------------------- #
+# ==================================================================================================================== #
+
+# Abbreviation for the language, if there are multiple implementations of an abbreviation the older ones are
+# overwritten by the newer ones.
+# Examples:
+#   [en]
+#   [de]
+#   [ru]
+[language]
+
+# Paths to the files containing your word files. The paths are relative to this directory.
+# You can add as many words as you want, if a word is in multiple files it is only added once.
+# The case (lower or UPPER) of the words does not matter, when they are loaded they are all treated as upper case.
+# The words may only contain certain letters, if a word contains other letters it is skipped.
+# The alloed letters can be found under "settings/words.py" assigned to the variable "WORD_VALID_LETTERS". It is not
+# advisable to change the vaid leters.
+words = [
+    "words/example_dir/a_word.dic",
+    "words/another_example_dir/another_word.dic",
+]
+
+# The minimum length the words may have. Words under that length are ignored. If you don't want to have a minimum length
+# set it to something smaller than one, like 0, -1, -2,... or comment out the variable.
+min_word_length = 4
+
+# The maximum length the words may have. Words over that length are ignored. If you don't want to have a maximum length
+# set it to something smaller than one, like 0, -1, -2,... or comment out the variable.
+max_word_length = -1
+
+# ==================================================================================================================== #
+# --------------------------------------------------- For testing: --------------------------------------------------- #
+# ==================================================================================================================== #
+
+[en]
+words = [
+    "words/en/test.dic"
+]
+min_word_length = 4
+max_word_length = -1
+
+[de]
+words = [
+    "words/de/len_5.dic",
+    "words/de/len_6.dic",
+    "words/de/len_7.dic",
+    "words/de/len_8.dic",
+    "does_not_exist.test"
+]
+min_word_length = 4
+max_word_length = -1
+
+# ==================================================================================================================== #
+# -------------------------------------------------- Your own words: ------------------------------------------------- #
+# ==================================================================================================================== #

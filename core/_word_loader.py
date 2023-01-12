@@ -1,11 +1,16 @@
 import secrets
 
+try:
+    import tomllib as toml
+except ModuleNotFoundError:
+    import toml
+
 from settings import words as WORDS
 
 class WordLoader():
 
     def __init__(self):
-        self.words = dict()
+        self.words: dict[str, tuple[str, int, int]] = dict()
 
         self._load()
     
