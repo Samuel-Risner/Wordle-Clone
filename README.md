@@ -39,3 +39,4 @@ work in progress
  - [ ] Add minimal requirements for special characters etc. for the password
  - [ ] Add a bar to show the password security
  - [ ] Remove the base 64 encoding when submiting username and passowrd
+ - [ ] Show valid characters for username and password

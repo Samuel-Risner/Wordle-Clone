@@ -164,6 +164,11 @@ def active_games():
     print(games)
     return render_template("active_games.html", active_games=games, user=current_user)
 
+@app.route("/finished_games")
+@login_required
+def finished_games():
+    pass
+
 @app.route("/")
 def index():    
     return render_template("index.html", user=current_user)
