@@ -161,13 +161,18 @@ def select_game_language():
 @login_required
 def active_games():
     games = word_handler.get_active_games(current_user.id)
-    print(games)
     return render_template("active_games.html", active_games=games, user=current_user)
 
-@app.route("/finished_games")
+@app.route("/unviewed_scores")
 @login_required
-def finished_games():
-    pass
+def unviewed_scores():
+    game_ids = word_handler.get_unviewed_scores(current_user.id)
+
+    return render_template(
+        "unviewed_scores.html",
+        user=current_user,
+        game_ids=game_ids
+    )
 
 @app.route("/")
 def index():    

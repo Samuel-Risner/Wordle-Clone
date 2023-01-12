@@ -28,13 +28,14 @@ work in progress
 # TODO
  - [ ] Create a better svg for the delete key
  - [ ] Create a better svg for the enter key
- - [ ] Make the device keyboard usable on desktop
- - [ ] Create a button to show and hide the built in keyboard on desktop
+ - [ ] Make the device keyboard usable for desktop
+ - [ ] Create a button to show and hide the built in keyboard for desktop
  - [ ] Make flashed messages removable
  - [ ] Add css for flashed messages
  - [ ] Combine "settings/game.py" and "settings.words.py"
  - [ ] Add more words
- - [ ] Add functionality to show the highscores from finished games (when the user some how managed to evade them)
+ - [x] Add functionality to show the highscores from finished games (when the user some how managed to evade them)
+ - [ ] Add css for the highscores from finished games
  - [ ] Add css to the active games page
  - [ ] Add minimal requirements for special characters etc. for the password
  - [ ] Add a bar to show the password security
@@ -43,4 +44,3 @@ work in progress
  - [ ] Move "changable_settings.py" to a toml file
  - [ ] Add a user wide leaderboard
  - [ ] Save users highscores
- 
