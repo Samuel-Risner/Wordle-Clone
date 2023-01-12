@@ -41,3 +41,6 @@ work in progress
  - [ ] Remove the base 64 encoding when submiting username and passowrd
  - [ ] Show valid characters for username and password
  - [ ] Move "changable_settings.py" to a toml file
+ - [ ] Add a user wide leaderboard
+ - [ ] Save users highscores
+ 
