@@ -44,3 +44,4 @@ work in progress
  - [ ] Move "changable_settings.py" to a toml file
  - [ ] Add a user wide leaderboard
  - [ ] Save users highscores
+ - [ ] Make the word length and the available languages more dependent on the loaded words
