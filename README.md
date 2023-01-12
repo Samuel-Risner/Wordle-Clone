@@ -26,5 +26,16 @@ work in progress
 
   Replace *Here goes you recret key!* with something more secure.
 # TODO
- - [ ] create a better svg for the delete key
- - [ ] create a better svg for the enter key
+ - [ ] Create a better svg for the delete key
+ - [ ] Create a better svg for the enter key
+ - [ ] Make the device keyboard usable on desktop
+ - [ ] Create a button to show and hide the built in keyboard on desktop
+ - [ ] Make flashed messages removable
+ - [ ] Add css for flashed messages
+ - [ ] Combine "settings/game.py" and "settings.words.py"
+ - [ ] Add more words
+ - [ ] Add functionality to show the highscores from finished games (when the user some how managed to evade them)
+ - [ ] Add css to the active games page
+ - [ ] Add minimal requirements for special characters etc. for the password
+ - [ ] Add a bar to show the password security
+ - [ ] Remove the base 64 encoding when submiting username and passowrd
