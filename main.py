@@ -139,8 +139,8 @@ def select_game_size(language: str):
         language=language,
         select_language_url=url_for("select_game_language"),
         word_lengths = word_handler.get_word_lengths(language),
-        min_tries=settings.game.MIN_TRIES,
-        max_tries=settings.game.MAX_TRIES,
+        min_tries=settings.words.MIN_TRIES,
+        max_tries=settings.words.MAX_TRIES,
         user=current_user
     )
 

@@ -1,1 +1,1 @@
-from .import auth, db, game, words
+from .import auth, db, words
