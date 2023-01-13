@@ -43,4 +43,4 @@ work in progress
  - [ ] Show valid characters for username and password
  - [ ] Add a user wide leaderboard
  - [ ] Save users highscores
- - [ ] Make the word length and the available languages more dependent on the loaded words
+ - [x] Make the word length and the available languages more dependent on the loaded words
