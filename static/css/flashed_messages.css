@@ -1,0 +1,37 @@
+.flashed {
+    font-size: larger;
+    text-align: center;
+    overflow-wrap: break-word;
+
+    padding: 5px;
+    margin: 5px;
+
+    border-radius: 10px;
+
+    width: fit-content;
+    max-width: 80%;
+
+    color: antiquewhite;
+}
+
+.flashed button {
+    font-size: larger;
+    width: auto;
+    height: auto;
+
+    border: 0px;
+
+    background-color: rgb(0, 0, 0, 0);
+}
+
+.flashed.error {
+    background-color: red;
+}
+
+.flashed.success {
+    background-color: green;
+}
+
+.flashed.info {
+    background-color: blue;
+}

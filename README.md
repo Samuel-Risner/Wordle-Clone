@@ -31,7 +31,7 @@ work in progress
  - [x] Make the device keyboard usable for desktop
  - [ ] Create a button to show and hide the built in keyboard for desktop
  - [x] Make flashed messages removable
- - [ ] Add css for flashed messages
+ - [x] Add css for flashed messages
  - [ ] Combine "settings/game.py" and "settings.words.py"
  - [ ] Add more words
  - [x] Add functionality to show the highscores from finished games (when the user some how managed to evade them)

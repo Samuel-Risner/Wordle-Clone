@@ -63,16 +63,25 @@
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
+        <link rel="stylesheet" href="/static/css/flashed_messages.css">
+
             {% for category, message in messages %}
                 {% if category == "error" %}
-                    <div id="{{ loop.index }}">
+                    <div id="{{ loop.index }}" class="flashed error">
+                        {{ message }}
+                        <button onclick="remove_element('{{ loop.index }}')">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                {% elif category == "success" %}
+                    <div id="{{ loop.index }}" class="flashed success">
                         {{ message }}
                         <button onclick="remove_element('{{ loop.index }}')">
                             <span>&times;</span>
                         </button>
                     </div>
                 {% else %}
-                    <div id="{{ loop.index }}">
+                    <div id="{{ loop.index }}" class="flashed info">
                         {{ message }}
                         <button onclick="remove_element('{{ loop.index }}')">
                             <span>&times;</span>
