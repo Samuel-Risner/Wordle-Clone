@@ -349,3 +349,26 @@ function _victory(json_data) {
     }
     window.location.href = "/game/result/" + game_id;
 }
+window.onkeydown = function (event) {
+    console.log(event.keyCode);
+    var code = event.keyCode;
+    // enter
+    if (code === 13) {
+        _enter();
+        // backspace 
+    }
+    else if (code === 8) {
+        _remove_letter();
+        // letter
+    }
+    else {
+        if (code < 65) {
+            return;
+        }
+        if (code > 90) {
+            return;
+        }
+        var key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(code - 65);
+        _add_letter(key);
+    }
+};

@@ -28,7 +28,7 @@ work in progress
 # TODO
  - [ ] Create a better svg for the delete key
  - [ ] Create a better svg for the enter key
- - [ ] Make the device keyboard usable for desktop
+ - [x] Make the device keyboard usable for desktop
  - [ ] Create a button to show and hide the built in keyboard for desktop
  - [x] Make flashed messages removable
  - [ ] Add css for flashed messages
