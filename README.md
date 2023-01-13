@@ -32,7 +32,7 @@ work in progress
  - [ ] Create a button to show and hide the built in keyboard for desktop
  - [x] Make flashed messages removable
  - [x] Add css for flashed messages
- - [ ] Combine "settings/game.py" and "settings.words.py"
+ - [x] Combine "settings/game.py" and "settings.words.py"
  - [ ] Add more words
  - [x] Add functionality to show the highscores from finished games (when the user some how managed to evade them)
  - [ ] Add css for the highscores from finished games
