@@ -44,3 +44,4 @@ work in progress
  - [ ] Add a user wide leaderboard
  - [ ] Save users highscores
  - [x] Make the word length and the available languages more dependent on the loaded words
+ - [ ] Change the minimum and maximum word length comments in "words.toml",since there are some hard coded settings. Implementing those settings would be usefull aswell.
