@@ -29,14 +29,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="range" id="word_length" name="word_length" min="{{ min_word_length}}" 
-                            max="{{ max_word_length }}" oninput="display_input_value('word_length',
-                            'word_length_value')" step="1">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="word_length_value"></div>
+                        <select id="word_length" name="word_length">
+                            {% for word_length in word_lengths %}
+                                <option value="{{ word_length }}"> {{ word_length}} </option>
+                            {% endfor %}
+                        </select>
                     </td>
                 </tr>
                 <tr>

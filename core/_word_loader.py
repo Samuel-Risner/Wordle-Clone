@@ -25,6 +25,9 @@ class WordLoader():
         """
 
         self._load()
+
+        self.supported_languages: list = list(self.words.keys())
+        """Contains the abbreviations for the supported languages. So basically the keys from `self.words`."""
     
     def _load(self):
         """Loads all words."""
@@ -129,6 +132,9 @@ class WordLoader():
                         word_lengths.append(length)
                         new_language_dict[length] = [word]
             
+            # Sort the lengths from smallest to largest.
+            word_lengths.sort()
+
             # Add the language to the class attribute.
             self.words[language] = (new_language_dict, word_lengths)
 
@@ -143,12 +149,12 @@ class WordLoader():
         if language is None:
             return None
         
-        length_set = language_dict[0].get(length)
+        length_list = language_dict[0].get(length)
 
-        if length_set is None:
+        if length_list is None:
             return None
         
-        return secrets.choice(length_set)
+        return secrets.choice(length_list)
 
     def word_exists(self, word: str, length: int, language: str, default: bool) -> bool:
         """Checks if a word `word` from the language `language` and with the length `length` was loaded. If the language
@@ -166,3 +172,11 @@ class WordLoader():
             return default
         
         return word in length_set
+    
+    def get_word_lengths(self, language: str) -> list[int] | None:
+        """Returns a list with the loaded word lengths. "None" is returned if the language is not supported."""
+
+        if language not in self.supported_languages:
+            return None
+
+        return self.words.get(language)[1]

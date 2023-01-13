@@ -236,3 +236,13 @@ class WordHandler():
                 results.append(game_id)
 
         return results
+    
+    def get_supported_languages(self) -> list:
+        """Returns a list containing the abbreviations for the supported languages."""
+
+        return self.word_loader.supported_languages
+    
+    def get_word_lengths(self, language: str) -> list[int] | None:
+        """Returns a list with the loaded word lengths. "None" is returned if the language is not supported."""
+        
+        return self.word_loader.get_word_lengths(language)

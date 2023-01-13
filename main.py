@@ -112,7 +112,7 @@ def game(game_id: str):
 @app.route("/game/setup/<language>", methods=["GET", "POST"])
 @login_required
 def select_game_size(language: str):
-    if language not in settings.game.SUPPORTED_LANGUAGES:
+    if language not in word_handler.get_supported_languages():
         return render_error(400)
     
     if request.method == "POST":
@@ -124,24 +124,21 @@ def select_game_size(language: str):
         
         try:
             word_length = int(word_length)
-        except ValueError:
-            return render_error(400)
-        
-        try:
             amount_tries = int(amount_tries)
         except ValueError:
             return render_error(400)
         
-        game_id = word_handler.new_word(current_user.id, word_length, amount_tries, language)
+        if word_length in word_handler.get_word_lengths(language):
+            game_id = word_handler.new_word(current_user.id, word_length, amount_tries, language)
+            return redirect(url_for("game", game_id=game_id))
 
-        return redirect(url_for("game", game_id=game_id))
+        return render_error(400)
 
     return render_template(
         "select_game_stuff.html",
         language=language,
         select_language_url=url_for("select_game_language"),
-        min_word_length=settings.game.MIN_WORD_LEN,
-        max_word_length=settings.game.MAX_WORD_LEN,
+        word_lengths = word_handler.get_word_lengths(language),
         min_tries=settings.game.MIN_TRIES,
         max_tries=settings.game.MAX_TRIES,
         user=current_user
@@ -152,7 +149,7 @@ def select_game_size(language: str):
 def select_game_language():
     return render_template(
         "select_game_language.html",
-        languages=settings.game.SUPPORTED_LANGUAGES,
+        languages=word_handler.get_supported_languages(),
         select_game_size_url=url_for("select_game_size", language=""),
         user=current_user
     )
