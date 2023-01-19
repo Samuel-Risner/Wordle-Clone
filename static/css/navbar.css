@@ -48,4 +48,5 @@
 @media only screen and (min-width: 768px) {
     .navbar.bg_clolour_show {width: 25vw;}
     .hamburger img {width: 4vw;}
+    .navbar a {font-size: xx-large;}
 }
