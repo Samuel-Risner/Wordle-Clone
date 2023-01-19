@@ -36,7 +36,7 @@ work in progress
  - [ ] Add more words
  - [x] Add functionality to show the highscores from finished games (when the user some how managed to evade them)
  - [ ] Add css for the highscores from finished games
- - [ ] Add css to the active games page
+ - [x] Add css to the active games page
  - [ ] Add minimal requirements for special characters etc. for the password
  - [ ] Add a bar to show the password security
  - [ ] Remove the base 64 encoding when submiting username and passowrd
