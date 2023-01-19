@@ -11,9 +11,6 @@ DEFAULT_JSON_RESPONSE = Response(json.dumps(None), mimetype="application/json")
 
 PATH_TO_WORD_TOML_FILE = "words.toml"
 
-MIN_WORD_LEN = 3
-MAX_WORD_LEN = 9
-
 MIN_TRIES = 1
 MAX_TRIES = 32
 
