@@ -152,7 +152,9 @@ function _set_progress(json_data) {
             }
             if (num == 0) {
                 letter_object.className = "letter does_not_occur_in_game";
-                key.className = "keyboard_contents button does_not_occur_in_game";
+                if (key.className == "keyboard_contents button") {
+                    key.className = "keyboard_contents button does_not_occur_in_game";
+                }
             }
             else if (num == 1) {
                 letter_object.className = "letter occurs_in_word";
