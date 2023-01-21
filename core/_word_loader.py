@@ -39,19 +39,19 @@ class WordLoader():
             # Check if all characters are valid.
             for character in word:
                 if character not in WORD_VALID_LETTERS:
-                    print(f"Word: '{word}' contains an invalid character: '{character}'.")
+                    # print(f"Word: '{word}' contains an invalid character: '{character}'.")
                     return False
             
             # Check if the word is long enough.
             if min_length > 0:
                 if len(word) < min_length:
-                    print(f"Word: '{word}' is to short, minimum length: '{min_length}'.")
+                    # print(f"Word: '{word}' is to short, minimum length: '{min_length}'.")
                     return False
             
             # Check if the word isn't to long.
             if max_length > 0:
                 if len(word) > max_length:
-                    print(f"Word: '{word}' is to long, maximum length: '{max_length}'.")
+                    # print(f"Word: '{word}' is to long, maximum length: '{max_length}'.")
                     return False
 
             return True
@@ -62,7 +62,7 @@ class WordLoader():
 
         # If the file wasn't loaded successfully.
         if not isinstance(toml_stuff, dict):
-            print(f"Unable to load toml file: '{PATH_TO_WORD_TOML_FILE}' because no dictionary was returned.")
+            # print(f"Unable to load toml file: '{PATH_TO_WORD_TOML_FILE}' because no dictionary was returned.")
             raise
         
         # Remove the schematic dictionary.
@@ -78,7 +78,7 @@ class WordLoader():
             # that language.
             word_paths: list[str] = language_dict.get("words")
             if word_paths is None:
-                print(f"The language '{language}' has no paths to files containing words.")
+                # print(f"The language '{language}' has no paths to files containing words.")
                 continue
             
             # Get the minimum word length, the default is -1.
@@ -138,7 +138,7 @@ class WordLoader():
             # Add the language to the class attribute.
             self.words[language] = (new_language_dict, word_lengths)
 
-            print(self.words)
+            # print(self.words)
     
     def get_random_word(self, length: int, language: str) -> str | None:
         """Returns a random word from the language `language` with the length `length`. If the language does not exist

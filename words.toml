@@ -32,23 +32,30 @@ max_word_length = -1
 # --------------------------------------------------- For testing: --------------------------------------------------- #
 # ==================================================================================================================== #
 
-[en]
-words = [
-    "words/en/test.dic"
-]
-min_word_length = 4
-max_word_length = -1
+# [en]
+# words = [
+#     "words/en/test.dic"
+# ]
+# min_word_length = 4
+# max_word_length = -1
 
-[de]
-words = [
-    "words/de/len_5.dic",
-    "words/de/len_6.dic",
-    "words/de/len_7.dic",
-    "words/de/len_8.dic",
-]
-min_word_length = 4
-max_word_length = -1
+# [de]
+# words = [
+#     "words/de/len_5.test.dic",
+#     "words/de/len_6.test.dic",
+#     "words/de/len_7.test.dic",
+#     "words/de/len_8.test.dic",
+# ]
+# min_word_length = 4
+# max_word_length = -1
 
 # ==================================================================================================================== #
 # -------------------------------------------------- Your own words: ------------------------------------------------- #
 # ==================================================================================================================== #
+
+[de]
+words = [
+    "words/de/german.dic"
+]
+min_word_length = 4
+max_word_length = -1
