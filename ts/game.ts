@@ -217,7 +217,9 @@ function _evaluate_submit_result(json_data: number[] | null): void {
 
         if (num == 0) {
             letter_object.className = "letter does_not_occur_in_game";
-            key.className = "keyboard_contents button does_not_occur_in_game";
+            if (key.className == "keyboard_contents button") {
+                key.className = "keyboard_contents button does_not_occur_in_game";
+            }
         } else if (num == 1) {
             letter_object.className = "letter occurs_in_word";
             if (key.className != "keyboard_contents button correct_position") {
