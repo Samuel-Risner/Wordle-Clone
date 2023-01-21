@@ -41,6 +41,8 @@ var current_try = 0;
 var letters = [];
 var current_letter = [0, 0];
 var current_word = "";
+var enter_button;
+var delete_button;
 /**
  * This function is called from a script tag in the html file.
  * @param new_game_id The game id that is going to be used.
@@ -143,14 +145,24 @@ function _set_progress(json_data) {
             var num = match[letter];
             var letter_object = letters[line][letter];
             letter_object.textContent = character;
+            var key = document.getElementById(character);
+            if (key === null) {
+                console.error("Could not retreive the html element with the id: '" + character + "'.");
+                return;
+            }
             if (num == 0) {
                 letter_object.className = "letter does_not_occur_in_game";
+                key.className = "keyboard_contents button does_not_occur_in_game";
             }
             else if (num == 1) {
                 letter_object.className = "letter occurs_in_word";
+                if (key.className != "keyboard_contents button correct_position") {
+                    key.className = "keyboard_contents button occurs_in_word";
+                }
             }
             else if (num == 2) {
                 letter_object.className = "letter correct_position";
+                key.className = "keyboard_contents button correct_position";
             }
         }
     }
@@ -190,7 +202,6 @@ function _remove_letter() {
     letters[current_letter[1]][current_letter[0]].textContent = "";
 }
 /**
- *
  * @returns A promise with json data containing the matches for the characters with the guessed word.
  */
 function _get_word_result() {
@@ -217,14 +228,25 @@ function _evaluate_submit_result(json_data) {
     for (var i = 0; i < word_length; i++) {
         var letter_object = letters[current_letter[1]][i];
         var num = json_data[i];
+        var character = current_word.charAt(i);
+        var key = document.getElementById(character);
+        if (key === null) {
+            console.error("Could not retreive the html element with the id: '" + character + "'.");
+            return;
+        }
         if (num == 0) {
             letter_object.className = "letter does_not_occur_in_game";
+            key.className = "keyboard_contents button does_not_occur_in_game";
         }
         else if (num == 1) {
             letter_object.className = "letter occurs_in_word";
+            if (key.className != "keyboard_contents button correct_position") {
+                key.className = "keyboard_contents button occurs_in_word";
+            }
         }
         else if (num == 2) {
             letter_object.className = "letter correct_position";
+            key.className = "keyboard_contents button correct_position";
         }
     }
     current_word = "";
@@ -236,7 +258,15 @@ function _enter() {
     if (current_word.length != word_length) {
         return;
     }
-    _get_word_result().then(function (_res) { console.log("SUPER!"); console.log(_res); _evaluate_submit_result(_res); })["catch"](function (_res) { console.log("UPSI!"); console.log(_res); });
+    enter_button.disabled = true;
+    delete_button.disabled = true;
+    _get_word_result().then(function (_res) {
+        console.log("SUPER!");
+        console.log(_res);
+        _evaluate_submit_result(_res);
+        enter_button.disabled = false;
+        delete_button.disabled = false;
+    })["catch"](function (_res) { console.log("UPSI!"); console.log(_res); });
 }
 /**
  * Creates the keyboard for the user.
@@ -312,6 +342,7 @@ function create_keyboard() {
     img.src = "/static/images/enter_key.svg";
     button.onclick = _enter;
     button.className = "keyboard_contents button";
+    enter_button = button;
     var _loop_3 = function () {
         cell = document.createElement("td");
         row.appendChild(cell);
@@ -342,6 +373,7 @@ function create_keyboard() {
     img.src = "/static/images/delete_key_v2.svg";
     button.onclick = _remove_letter;
     button.className = "keyboard_contents button";
+    delete_button = button;
 }
 function _victory(json_data) {
     for (var i = 0; i < json_data.length; i++) {
