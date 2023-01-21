@@ -82,7 +82,6 @@ class Word():
     def add_try(self, word_test: str) -> tuple[int, list[int] | None]:
         # game is over
         if (self.remaining_tries <= 0) or self.victory:
-            # print("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo")
             return -6 , None
         
         self.remaining_tries -= 1

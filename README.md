@@ -45,3 +45,4 @@ work in progress
  - [ ] Save users highscores
  - [x] Make the word length and the available languages more dependent on the loaded words
  - [x] Remove hard coded minimum and maximum word lengths.
+ - [ ] Improve the word comparison in the python file.
