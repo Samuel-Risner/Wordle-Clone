@@ -39,7 +39,7 @@ work in progress
  - [x] Add css to the active games page
  - [ ] Add minimal requirements for special characters etc. for the password
  - [ ] Add a bar to show the password security
- - [ ] Remove the base 64 encoding when submiting username and passowrd
+ - [x] Remove the base 64 encoding when submiting username and passowrd
  - [ ] Show valid characters for username and password
  - [ ] Add a user wide leaderboard
  - [ ] Save users highscores

@@ -4,22 +4,20 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <script type="text/javascript" src="static/js/input_to_b64.js"></script>
-
     <link rel="stylesheet" href="/static/css/auth.css">
     
     <div class="user_input">
-        <label for="username">Enter username:</label>
-        <br>
-        <input type="text" id="username">
-        <br>
-
-        <label for="password">Enter password:</label>
-        <br>
-        <input type="password" id="password">
-
         <form method="post" id="to_submit">
-            <button type="submit" onclick="input_to_b64(['username', 'password'], 'to_submit')">
+            <label for="username">Enter username:</label>
+            <br>
+            <input type="text" id="username" name="username">
+            <br>
+
+            <label for="password">Enter password:</label>
+            <br>
+            <input type="password" id="password" name="password">
+
+            <button type="submit">
                 Submit
             </button>
         </form>

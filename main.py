@@ -14,7 +14,7 @@ from core.db_models import User as MODEL_USER
 from core.error_pages import render_error, init_error_pages
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
-from core.validate_password_username import validate_password, validate_username, b64_decode
+from core.validate_password_username import validate_password, validate_username
 from core.word_handler import WordHandler
 from settings.db import DB
 import settings
@@ -29,7 +29,7 @@ DB.init_app(app)
 create_database(app)
 
 login_manager = LoginManager()
-login_manager.login_view = "login"
+login_manager.login_view = "login" # type: ignore
 login_manager.init_app(app)
 
 init_error_pages(app)
@@ -44,7 +44,7 @@ def get_progress(game_id: str):
     if not check_game_id(game_id):
         return settings.words.DEFAULT_JSON_RESPONSE
     
-    progress = word_handler.get_word_progress(current_user.id, game_id)
+    progress = word_handler.get_word_progress(current_user.id, game_id) # type: ignore
     
     if progress is None:
         return settings.words.DEFAULT_JSON_RESPONSE
@@ -57,11 +57,11 @@ def add_word(game_id: str, word: str):
     if (not check_game_id(game_id)) or (not check_word_characters(word)):
         return settings.words.DEFAULT_JSON_RESPONSE
     
-    success, result = word_handler.do_try(current_user.id, game_id, word)
+    success, result = word_handler.do_try(current_user.id, game_id, word) # type: ignore
 
     # defeat or victory / game over
     if success in (1, 2, -6):
-        word_handler.finish_word(current_user.id, game_id)
+        word_handler.finish_word(current_user.id, game_id) # type: ignore
     
     # no error occured
     if (success >= 0):
@@ -75,8 +75,8 @@ def game_result(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
     
-    word_info = word_handler.get_word_finished_info(current_user.id, game_id)
-    word_handler.remove_word(current_user.id, game_id)
+    word_info = word_handler.get_word_finished_info(current_user.id, game_id) # type: ignore
+    word_handler.remove_word(current_user.id, game_id) # type: ignore
     
     if word_info is None:
         return render_error(400)
@@ -96,7 +96,7 @@ def game(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
 
-    word = word_handler.get_word(current_user.id, game_id)
+    word = word_handler.get_word(current_user.id, game_id) # type: ignore
 
     if word is None:
         return render_error(404)
@@ -128,8 +128,17 @@ def select_game_size(language: str):
         except ValueError:
             return render_error(400)
         
-        if word_length in word_handler.get_word_lengths(language):
-            game_id = word_handler.new_word(current_user.id, word_length, amount_tries, language)
+        word_lengths = word_handler.get_word_lengths(language)
+        if word_lengths is None:
+            return render_error(404)
+        
+        if word_length in word_lengths:
+            game_id = word_handler.new_word(
+                current_user.id, # type: ignore
+                word_length,
+                amount_tries,
+                language
+            )
             return redirect(url_for("game", game_id=game_id))
 
         return render_error(400)
@@ -157,13 +166,17 @@ def select_game_language():
 @app.route("/active_games")
 @login_required
 def active_games():
-    games = word_handler.get_active_games(current_user.id)
+    games = word_handler.get_active_games(
+        current_user.id # type: ignore
+    )
     return render_template("active_games.html", active_games=games, user=current_user)
 
 @app.route("/unviewed_scores")
 @login_required
 def unviewed_scores():
-    game_ids = word_handler.get_unviewed_scores(current_user.id)
+    game_ids = word_handler.get_unviewed_scores(
+        current_user.id # type: ignore
+    )
 
     return render_template(
         "unviewed_scores.html",
@@ -212,15 +225,15 @@ def login():
             flash(password_check[1], category="error")
             return render_template("login.html", user=current_user)
         
-        # convert password and username from base 64 to plain text
-        username = b64_decode(username)
-        password = b64_decode(password)
+        # plain text username and password instead of url quoted 
+        username = username_check[2]
+        password = username_check[2]
 
         if username is None:
-            flash("Could not base 64 decode the username.", category="error")
+            flash("Could not url unquote the username.", category="error")
             return render_error(400)
         if password is None:
-            flash("Could not base 64 decode the password.", category="error")
+            flash("Could not url unquote the password.", category="error")
             return render_error(400)
         
         # get the user from the database
@@ -239,10 +252,6 @@ def login():
             return render_template("login.html", user=current_user)
         else:
             login_user(user, remember=settings.auth.REMEMBER_USER)
-
-            print(current_user.id)
-            print(isinstance(current_user.id, int))
-
             flash(f"Successfully logged in!", category="success")
             return redirect(url_for("index"))
 
@@ -278,6 +287,9 @@ def sign_up():
         username_check = validate_username(username)
         password_check = validate_password(password)
 
+        username = username_check[2]
+        password = password_check[2]
+
         if not username_check[0]:
             flash(username_check[1], category="error")
             return render_template("sign_up.html", user=current_user)
@@ -286,15 +298,11 @@ def sign_up():
             flash(password_check[1], category="error")
             return render_template("sign_up.html", user=current_user)
 
-        # convert password and username from base 64 to plain text
-        username = b64_decode(username)
-        password = b64_decode(password)
-
         if username is None:
-            flash("Could not base 64 decode the username.", category="error")
+            flash("Could not url unquote the username.", category="error")
             return render_error(400)
         if password is None:
-            flash("Could not base 64 decode the password.", category="error")
+            flash("Could not url unquote the password.", category="error")
             return render_error(400)
 
         # if the user already exists
