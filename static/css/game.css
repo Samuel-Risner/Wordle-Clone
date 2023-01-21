@@ -50,7 +50,7 @@ table {
     Style for the elements in the keyboard div.
 */
 
-.keyboard_contents button {
+.keyboard_contents.button {
     background-color: rgb(0, 0, 0, 0);
 
     color: rgb(0, 0, 0);
@@ -95,6 +95,18 @@ table {
     padding: 0px;
 
     border-collapse: collapse;
+}
+
+.keyboard_contents.button.correct_position {
+    background-color: green;
+}
+
+.keyboard_contents.button.occurs_in_word {
+    background-color: rgb(243, 221, 18);
+}
+
+.keyboard_contents.button.does_not_occur_in_game {
+    background-color: rgb(192, 192, 192);
 }
 
 /* For the enter and delete button. */

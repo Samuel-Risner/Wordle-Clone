@@ -73,7 +73,7 @@ function init_game() {
             tr.appendChild(td);
             var div = document.createElement("div");
             td.appendChild(div);
-            div.textContent = ""; // + w + "|" + h;
+            div.textContent = "";
             div.style.width = String(cell_width) + "vw";
             div.style.fontSize = String(cell_width * 0.8) + "vw";
             div.className = "letter";
@@ -266,6 +266,7 @@ function create_keyboard() {
         button.textContent = letter_;
         button.onclick = function () { _add_letter(letter_); };
         button.id = letter_;
+        button.className = "keyboard_contents button";
     };
     var cell, div, button;
     for (var letter = 0; letter < row_1.length; letter++) {
@@ -287,6 +288,7 @@ function create_keyboard() {
         button.textContent = letter_;
         button.onclick = function () { _add_letter(letter_); };
         button.id = letter_;
+        button.className = "keyboard_contents button";
     };
     var cell, div, button;
     for (var letter = 0; letter < row_2.length; letter++) {
@@ -309,6 +311,7 @@ function create_keyboard() {
     button.appendChild(img);
     img.src = "/static/images/enter_key.svg";
     button.onclick = _enter;
+    button.className = "keyboard_contents button";
     var _loop_3 = function () {
         cell = document.createElement("td");
         row.appendChild(cell);
@@ -320,6 +323,7 @@ function create_keyboard() {
         button.textContent = letter_;
         button.onclick = function () { _add_letter(letter_); };
         button.id = letter_;
+        button.className = "keyboard_contents button";
     };
     var cell, div, button;
     for (var letter = 0; letter < row_3.length; letter++) {
@@ -337,6 +341,7 @@ function create_keyboard() {
     button.appendChild(img);
     img.src = "/static/images/delete_key_v2.svg";
     button.onclick = _remove_letter;
+    button.className = "keyboard_contents button";
 }
 function _victory(json_data) {
     for (var i = 0; i < json_data.length; i++) {

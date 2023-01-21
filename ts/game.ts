@@ -46,7 +46,7 @@ function init_game(): void {
             var div: HTMLDivElement = document.createElement("div");
             td.appendChild(div)
             
-            div.textContent = ""; // + w + "|" + h;
+            div.textContent = "";
             div.style.width = String(cell_width) + "vw";
             div.style.fontSize = String(cell_width * 0.8) + "vw";
             div.className = "letter";
@@ -93,6 +93,7 @@ function _undo_last_word(): void {
         current_word = "";
     }
 }
+
 /**
  * Loads the already existing tries into the ui.
  * @param json_data The data for the tries, it consists of a string, the guesses word, and then an array of numbers
@@ -252,6 +253,7 @@ function create_keyboard(): void{
         button.textContent = letter_;
         button.onclick = () => {_add_letter(letter_);};
         button.id = letter_;
+        button.className = "keyboard_contents button";
     }
 
     // row 2
@@ -273,6 +275,7 @@ function create_keyboard(): void{
         button.textContent = letter_;
         button.onclick = () => {_add_letter(letter_);};
         button.id = letter_;
+        button.className = "keyboard_contents button";
     }
 
     // row 3
@@ -294,6 +297,7 @@ function create_keyboard(): void{
     button.appendChild(img);
     img.src = "/static/images/enter_key.svg";
     button.onclick = _enter;
+    button.className = "keyboard_contents button";
     
     for (var letter: number = 0; letter < row_3.length; letter++) {
         var cell: HTMLTableCellElement = document.createElement("td");
@@ -307,6 +311,7 @@ function create_keyboard(): void{
         button.textContent = letter_;
         button.onclick = () => {_add_letter(letter_);};
         button.id = letter_;
+        button.className = "keyboard_contents button";
     }
 
     // delete button
@@ -321,6 +326,7 @@ function create_keyboard(): void{
     button.appendChild(img);
     img.src = "/static/images/delete_key_v2.svg";
     button.onclick = _remove_letter;
+    button.className = "keyboard_contents button";
 }
 
 function _victory(json_data: number[]): void {
