@@ -11,6 +11,7 @@ from changable_settings import PORT, HOST
 from core.checks import check_game_id, check_word_characters
 from core.create_db import create_database
 from core.db_models import User as MODEL_USER
+from core.db_models import Score as MODEL_SCORE
 from core.error_pages import render_error, init_error_pages
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
@@ -133,12 +134,14 @@ def select_game_size(language: str):
             return render_error(404)
         
         if word_length in word_lengths:
+
             game_id = word_handler.new_word(
                 current_user.id, # type: ignore
                 word_length,
                 amount_tries,
                 language
             )
+
             return redirect(url_for("game", game_id=game_id))
 
         return render_error(400)
@@ -301,6 +304,7 @@ def sign_up():
         if username is None:
             flash("Could not url unquote the username.", category="error")
             return render_error(400)
+
         if password is None:
             flash("Could not url unquote the password.", category="error")
             return render_error(400)

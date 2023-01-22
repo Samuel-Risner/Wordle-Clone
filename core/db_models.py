@@ -3,18 +3,16 @@ from flask_login import UserMixin
 from settings import auth
 from settings.db import DB
 
-class Score(DB.Model):
+class Score(DB.Model): # type: ignore
     id              = DB.Column(DB.Integer, primary_key=True)
 
     word_length     = DB.Column(DB.Integer())
     tries           = DB.Column(DB.Integer())
     completed       = DB.Column(DB.Integer())
-    best_time       = DB.Column(DB.Integer())
-    average_time    = DB.Column(DB.Integer())
 
     user_id = DB.Column(DB.Integer, DB.ForeignKey("user.id")) # "user.id" is meant to be lowercase 
 
-class User(DB.Model, UserMixin):
+class User(DB.Model, UserMixin): # type: ignore
     id              = DB.Column(DB.Integer, primary_key=True)
 
     username        = DB.Column(DB.String(auth.USERNAME_MAX_LEN), unique=True)
