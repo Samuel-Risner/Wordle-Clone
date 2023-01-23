@@ -59,8 +59,7 @@ work in progress
  - [ ] Add a bar to show the password security
  - [x] Remove the base 64 encoding when submiting username and passowrd
  - [ ] Show valid characters for username and password
- - [ ] Add a user wide leaderboard
- - [ ] Save users highscores
+ - [x] Save users highscores
  - [x] Make the word length and the available languages more dependent on the loaded words
  - [x] Remove hard coded minimum and maximum word lengths.
  - [ ] Improve the word comparison in the python file.
