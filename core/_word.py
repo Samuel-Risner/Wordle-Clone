@@ -15,7 +15,7 @@ class Word():
         self.victory = False
         self.try_results = list()
     
-    def get_progress(self) -> list[list[str, list[int]]]:
+    def get_progress(self) -> list[tuple[str, list[int]]]:
         return self.try_results
     
     def _do_try(self, word_test: str, word_og: str) -> tuple[int, list[int] | None]:
@@ -90,7 +90,7 @@ class Word():
 
         # if an error occured during comparing
         # no try is lost
-        if success < 0:
+        if (success < 0) or (result is None):
             self.remaining_tries += 1
             return success, result
         

@@ -14,4 +14,6 @@ PATH_TO_WORD_TOML_FILE = "words.toml"
 MIN_TRIES = 1
 MAX_TRIES = 32
 
-SUPPORTED_LANGUAGES = ["en", "de"]
+# SUPPORTED_LANGUAGES = ["en", "de"]
+LANGUAGE_MAX_LEN = 2
+LANGUAGE_VALID_CHARS = "abcdefghijklmnopqrstuvwxyz"

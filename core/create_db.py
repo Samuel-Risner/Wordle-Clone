@@ -1,14 +1,14 @@
-from os import path
+import os
 
 from flask import Flask
 
-import settings
+from settings.db import PATH, NAME, DB
 
-from .db_models import Score, User
+def create_database(app: Flask):
+    """Creates the database if it does already exist."""
 
-def create_database(app:Flask):
-    if not path.exists(settings.db.PATH):
+    if (not os.path.exists(PATH)) and (not os.path.exists(NAME)):
         with app.app_context():
-            settings.db.DB.create_all()
+            DB.create_all()
             
         print('Created Database!')

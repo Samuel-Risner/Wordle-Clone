@@ -1,4 +1,4 @@
-import secrets
+import secrets, logging
 
 from settings import words
 
@@ -8,19 +8,18 @@ from ._word import Word
 class WordHandler():
 
     def __init__(self):
+        self.logger = logging.getLogger("word_handler")
+
         self.word_loader = WordLoader()
+
         self.active_words: dict[str, Word] = dict()
         """The keys are unique ids and the values "Word" objects."""
         self.finished_words: dict[str, Word] = dict()
         """The keys are unique ids and the values "Word" objects."""
-        self.users: dict[int, str] = dict()
+        self.users: dict[int, list[str]] = dict()
         """The keys are user ids and the values game ids."""
         self.unique_ids: set[str] = set()
         """Contains all the unique ids."""
-
-        self.active_words.setdefault(None)
-        self.finished_words.setdefault(None)
-        self.users.setdefault(None)
     
     def _create_unique_id(self) -> str:
         """Creates a new unique id which is not yet in "self.unique_ids", adds it to "self.unique_ids" and returns it."""
@@ -36,12 +35,18 @@ class WordHandler():
             # If the id is unique it is returned.
             if the_id not in self.unique_ids:
                 self.unique_ids.add(the_id)
+                self.logger.debug(f"Created new unique id: '{the_id}'.")
                 return the_id
 
-    def new_word(self, user_id: int, amount_letters: int, amount_tries: int, language: str) -> str:
+    def new_word(self, user_id: int, amount_letters: int, amount_tries: int, language: str) -> str | None:
         """Creates a new word and returns the words unique id."""
 
         word = self.word_loader.get_random_word(amount_letters, language)
+
+        if word is None:
+            # Error message already handeled by "self.word_loader".
+            return None
+
         unique_id = self._create_unique_id()
         word_object = Word(word, user_id, amount_tries, self.word_loader, language)
 
@@ -54,9 +59,9 @@ class WordHandler():
 
         return unique_id
     
-    def get_word_progress(self, user_id: int, game_id: str) -> list[list[str, list[int]]] | None:
+    def get_word_progress(self, user_id: int, game_id: str) -> list[tuple[str, list[int]]] | None:
         """Returns the progress the user has made in guessing the word. If the word with the unique id `game_id` isn't
-        active or the user id `user_id` doesn't correspond to the game "None" is returned.
+        active or the user id `user_id` doesn't correspond to the game `None` is returned.
 
         Otherwise a list with the progress is returned. The list consists of one ore more guesses, each guess consists
         of a string, the guessed word, and a list with integers. Each integer gives information about the corresponding
@@ -65,31 +70,31 @@ class WordHandler():
             - 1 -> The letter occurs in the word but isn't at the right position.
             - 2 -> The letter occurs in word and is at the right position."""
 
-        word: Word = self.active_words.get(game_id)
+        word = self.get_word(user_id, game_id)
 
         if word is None:
-            return None
-        
-        if word.user_id != user_id:
+            # Error already handeled in "self.get_word".
             return None
         
         return word.get_progress()
     
     def get_word(self, user_id: int, game_id: str) -> Word | None:
         """Returns the "Word" object corresponding to the unique id `game_id`. If the word is not active or the user id
-        `user_id` does not match the word "None" is returned."""
+        `user_id` does not match the word `None` is returned."""
 
-        word: Word = self.active_words.get(game_id)
+        word = self.active_words.get(game_id)
 
         if word is None:
+            self.logger.debug(f"The user with the id: '{user_id}' has no game with the unique id: '{game_id}'.")
             return None
         
         if word.user_id != user_id:
+            self.logger.critical(f"Some logic error happened. Function: 'get_word', user id: '{user_id}', unique id: '{game_id}'.")
             return None
         
         return word
     
-    def do_try(self, user_id: int, game_id: str, word_test: str) -> tuple[int, list[int]] | tuple[int, None]:
+    def do_try(self, user_id: int, game_id: str, word_test: str) -> tuple[int, list[int] | None]:
         """Does a try for the word with the unique id `game_id` and the word for guessing `word_test`.
         
         Returns the following:
@@ -113,7 +118,7 @@ class WordHandler():
             - 1 -> The letter occurs in the word but isn't at the right position.
             - 2 -> The letter occurs in word and is at the right position."""
 
-        word: Word = self.active_words.get(game_id)
+        word = self.active_words.get(game_id)
 
         if word is None:
             return -4, None
@@ -125,10 +130,10 @@ class WordHandler():
     
     def finish_word(self, user_id: int, game_id: str) -> bool:
         """Removes a word from "self.active_words" and adds it to "self.finished_words". Through this the user can no
-        longer try to guess the word. "True" is returned with the action was successfull, otherwise "False". "False" is
+        longer try to guess the word. `True` is returned with the action was successfull, otherwise `False`. `False` is
         also returned if the user id `user_id` does not match the word."""
 
-        word: Word = self.active_words.get(game_id)
+        word = self.active_words.get(game_id)
 
         if word is None:
             return False
@@ -146,10 +151,10 @@ class WordHandler():
 
     def remove_word(self, user_id: int, game_id: str) -> bool:
         """Removes a word from "self.finished_words", its unique id from "self.unique_ids" and also from "self.users".
-        "True" is returned if the action was successfull, "false" when it wasn't or the user id `user_id` doesn't match
+        `True` is returned if the action was successfull, `False` when it wasn't or the user id `user_id` doesn't match
         the one of the word."""
 
-        word: Word = self.finished_words.get(game_id)
+        word = self.finished_words.get(game_id)
 
         if word is None:
             return False
@@ -160,6 +165,7 @@ class WordHandler():
         self.finished_words.pop(game_id)
         self.users[user_id].remove(game_id)
         self.unique_ids.remove(game_id)
+
         return True
     
     def get_word_finished_info(self, user_id: int, game_id: str) -> tuple[bool, str, int, int] | None:
@@ -167,12 +173,12 @@ class WordHandler():
         `user_id` does not match the one of the word.
         
         Otherwise a tuple is returned containing the following:
-            - "True" if the game was won, "False" if not.
+            - `True` if the game was won, `False` if not.
             - The word the user had to guess.
             - How many tries the user had in total to guess the word.
             - How many tries the user needed to guess the word (which is irrelevant when the user lost)."""
 
-        word: Word = self.finished_words.get(game_id)
+        word = self.finished_words.get(game_id)
 
         if word is None:
             return None
@@ -182,7 +188,7 @@ class WordHandler():
         
         return word.victory, word.word, word.amount_tries, word.remaining_tries
     
-    def get_active_games(self, user_id: int) -> list[list[str, str, int, int, int]] | None:
+    def get_active_games(self, user_id: int) -> list[tuple[str, str, int, int, int]] | None:
         """Returns a lsit cantaining no or more active games. Each active game is another list consisting of:
             - The game id / unique id
             - The language
@@ -190,7 +196,7 @@ class WordHandler():
             - The amount tries the user has to guess the word
             - The remaining tries the user has to guess the game.
 
-        "None" is returned if the user does not exist (shouldn't happen).
+        `None` is returned if the user does not exist (shouldn't happen).
 
         In "self.users" each user can have multiple games and also games that are not active. This case is handeled."""
 
@@ -204,7 +210,7 @@ class WordHandler():
             to_return.append(list())
             to_return[-1].append(game_id)
 
-            game: Word = self.active_words.get(game_id)
+            game = self.active_words.get(game_id)
 
             if game is None:
                 to_return.pop()
@@ -217,17 +223,18 @@ class WordHandler():
 
         return to_return
     
-    def get_unviewed_scores(self, user_id: int) -> None:
+    def get_unviewed_scores(self, user_id: int) -> list[str] | None:
         """Returns a list with all the game ids / unique ids that the user with the id `user_id` has completed and that
         were not removed yet from "self.finished_words".
 
-        "None" is returned if the user does not exist (shouldn't happen"""
-        user: str | None = self.users.get(user_id)
+        `None`  is returned if the user does not exist (shouldn't happen)."""
+
+        user = self.users.get(user_id)
 
         if user is None:
             return None
         
-        results = list()
+        results: list[str] = list()
 
         for game_id in user:
             game = self.finished_words.get(game_id)

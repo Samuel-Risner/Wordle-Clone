@@ -1,4 +1,6 @@
-import json
+import json, logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 from flask import Flask, Response
 from flask import render_template, redirect, flash, url_for
@@ -8,14 +10,13 @@ from flask_login import login_user, login_required, logout_user
 from flask_login import current_user
 
 from changable_settings import PORT, HOST
-from core.checks import check_game_id, check_word_characters
+from core.checks import check_game_id, check_word_characters, check_password, check_username, check_language
 from core.create_db import create_database
 from core.db_models import User as MODEL_USER
 from core.db_models import Score as MODEL_SCORE
 from core.error_pages import render_error, init_error_pages
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
-from core.validate_password_username import validate_password, validate_username
 from core.word_handler import WordHandler
 from settings.db import DB
 import settings
@@ -35,6 +36,8 @@ login_manager.init_app(app)
 
 init_error_pages(app)
 
+logger = logging.getLogger("main")
+
 @login_manager.user_loader
 def load_user(user_id):
     return MODEL_USER.query.get(int(user_id))
@@ -42,6 +45,8 @@ def load_user(user_id):
 @app.route("/json/get_progress/<game_id>", methods=["POST", "GET"])
 @login_required
 def get_progress(game_id: str):
+    """Either returns the tries the user made dumped as json or "None" dumped as json when something went wromg."""
+
     if not check_game_id(game_id):
         return settings.words.DEFAULT_JSON_RESPONSE
     
@@ -55,6 +60,8 @@ def get_progress(game_id: str):
 @app.route("/json/add_word/<game_id>/<word>")
 @login_required
 def add_word(game_id: str, word: str):
+    """Either returns the result of the try the user made dumped as json or "None" dumped as json when something went wromg."""
+
     if (not check_game_id(game_id)) or (not check_word_characters(word)):
         return settings.words.DEFAULT_JSON_RESPONSE
     
@@ -73,14 +80,23 @@ def add_word(game_id: str, word: str):
 @app.route("/game/result/<game_id>")
 @login_required
 def game_result(game_id: str):
+    """Returns a rendered page for viewing the game result, deletes the game and adds a try to the database."""
+
     if not check_game_id(game_id):
         return render_error(404)
     
     word_info = word_handler.get_word_finished_info(current_user.id, game_id) # type: ignore
     word_handler.remove_word(current_user.id, game_id) # type: ignore
-    
+
     if word_info is None:
         return render_error(400)
+
+    scores: list = current_user.score # type: ignore
+    for s in scores:
+        if (s.word_length == len(word_info[1])) and (s.tries == word_info[2]):
+            s.completed += 1
+            DB.session.commit()
+            break
 
     return render_template(
         "result.html",
@@ -94,6 +110,8 @@ def game_result(game_id: str):
 @app.route("/game/play/<game_id>")
 @login_required
 def game(game_id: str):
+    """Returns a rendered page for playing the game. A error page if the game id `game_id` does not exist for the user."""
+
     if not check_game_id(game_id):
         return render_error(404)
 
@@ -113,6 +131,12 @@ def game(game_id: str):
 @app.route("/game/setup/<language>", methods=["GET", "POST"])
 @login_required
 def select_game_size(language: str):
+    """Returns a rendered templatefor game setup when `GET`is used, when `POST` is uded a new game is created and the
+    user is redirected and an entry for the game is added to the database linked to the user."""
+
+    if not check_language(language):
+        return render_error(400)
+
     if language not in word_handler.get_supported_languages():
         return render_error(400)
     
@@ -134,6 +158,25 @@ def select_game_size(language: str):
             return render_error(404)
         
         if word_length in word_lengths:
+            scores: list = current_user.score # type: ignore
+            already_exists = False
+
+            for s in scores:
+                if (s.word_length == word_length) and (s.tries == amount_tries):
+                    already_exists = True
+                    break
+            
+            if not already_exists:
+                score = MODEL_SCORE(
+                    word_length=word_length,
+                    tries=amount_tries,
+                    completed=0,
+                    language=language,
+                    user_id=current_user.id # type: ignore 
+                )
+
+                DB.session.add(score)
+                DB.session.commit()
 
             game_id = word_handler.new_word(
                 current_user.id, # type: ignore
@@ -159,6 +202,8 @@ def select_game_size(language: str):
 @app.route("/game/choose_language")
 @login_required
 def select_game_language():
+    """Returns a rendered page for selecting the game language. The user is redirected from the page by using buttons."""
+
     return render_template(
         "select_game_language.html",
         languages=word_handler.get_supported_languages(),
@@ -169,17 +214,18 @@ def select_game_language():
 @app.route("/active_games")
 @login_required
 def active_games():
-    games = word_handler.get_active_games(
-        current_user.id # type: ignore
-    )
+    """Returns a rendered template displaying the games the user currently has runnung."""
+
+    games = word_handler.get_active_games(current_user.id) # type: ignore
+
     return render_template("active_games.html", active_games=games, user=current_user)
 
 @app.route("/unviewed_scores")
 @login_required
 def unviewed_scores():
-    game_ids = word_handler.get_unviewed_scores(
-        current_user.id # type: ignore
-    )
+    """Returns a rendered template displaying the scores/ game results the user hasn't seen yet."""
+
+    game_ids = word_handler.get_unviewed_scores(current_user.id) # type: ignore
 
     return render_template(
         "unviewed_scores.html",
@@ -187,23 +233,33 @@ def unviewed_scores():
         game_ids=game_ids
     )
 
+@app.route("/stats")
+@login_required
+def stats():
+    stuff = list()
+
+    scores: list[MODEL_SCORE] = current_user.score # type: ignore 
+
+    for s in scores:
+        stuff.append((s.language, s.word_length, s.tries, s.completed))
+
+    return render_template(
+        "stats.html",
+        user=current_user,
+        stuff=stuff
+    )
+
 @app.route("/")
 def index():
+    """The home page."""
+
     return render_template("index.html", user=current_user)
 
 @app.route("/home")
 def home():
+    """Redirects to the home page."""
+
     return redirect(url_for("index"))
-
-# @app.route("/account")
-# @login_required
-# def account():
-#     return render_template("account.html")
-
-# @app.route("/account/delete_account")
-# @login_required
-# def delete_account():
-#     return render_template("delete_account.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -217,8 +273,8 @@ def login():
             return render_error(400)
         
         # check if they have correct formatting
-        username_check = validate_username(username)
-        password_check = validate_password(password)
+        username_check = check_username(username)
+        password_check = check_password(password)
 
         if not username_check[0]:
             flash(username_check[1], category="error")
@@ -256,6 +312,9 @@ def login():
         else:
             login_user(user, remember=settings.auth.REMEMBER_USER)
             flash(f"Successfully logged in!", category="success")
+
+            # https://flask-login.readthedocs.io/en/latest/#login-example
+
             return redirect(url_for("index"))
 
     return render_template("login.html", user=current_user)
@@ -287,8 +346,8 @@ def sign_up():
             return render_template("sign_up.html", user=current_user)
         
         # check if they have correct formatting
-        username_check = validate_username(username)
-        password_check = validate_password(password)
+        username_check = check_username(username)
+        password_check = check_password(password)
 
         username = username_check[2]
         password = password_check[2]
@@ -323,6 +382,9 @@ def sign_up():
         login_user(new_user, remember=settings.auth.REMEMBER_USER)
 
         flash("Account created! And logged in!", category="success")
+
+        # https://flask-login.readthedocs.io/en/latest/#login-example
+
         return (redirect(url_for("index")))
 
     return render_template("sign_up.html", user=current_user)

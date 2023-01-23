@@ -1,11 +1,12 @@
 from flask_login import UserMixin
 
-from settings import auth
+from settings import auth, words
 from settings.db import DB
 
 class Score(DB.Model): # type: ignore
     id              = DB.Column(DB.Integer, primary_key=True)
 
+    language        = DB.Column(DB.String(words.LANGUAGE_MAX_LEN))
     word_length     = DB.Column(DB.Integer())
     tries           = DB.Column(DB.Integer())
     completed       = DB.Column(DB.Integer())
