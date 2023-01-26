@@ -8,7 +8,6 @@ from flask import request
 from flask_login import LoginManager
 from flask_login import login_user, login_required, logout_user
 from flask_login import current_user
-# from flask_assets import Bundle, Environment
 
 from changable_settings import PORT, HOST
 from core.checks import check_game_id, check_word_characters, check_password, check_username, check_language
@@ -38,11 +37,6 @@ login_manager.login_view = "login" # type: ignore
 login_manager.init_app(app)
 
 init_error_pages(app)
-
-# assets = Environment(app)
-# css = Bundle("src/main.css", output="dist/main.css")
-# assets.register("css", css)
-# css.build()
 
 logger = logging.getLogger("main")
 
