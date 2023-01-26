@@ -2,7 +2,6 @@ secret.json
 instance/
 database.db
 disapproved_words.txt
-! static/dist
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -16,7 +15,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+# dist/
 downloads/
 eggs/
 .eggs/
