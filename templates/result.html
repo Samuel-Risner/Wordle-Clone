@@ -11,6 +11,9 @@
 
 {% block content %}
     <link rel="stylesheet" href="/static/css/select_game_stuff.css">
+    <link rel="stylesheet" href="/static/css/submit_button.css">
+
+    <script type="text/javascript" src="/static/js/disapprove_word.js"></script>
 
     <table>
         <tr>
@@ -56,5 +59,19 @@
                 </td>
             </tr>
         {% endif %}
+        <tr>
+            <td>
+                <button class="submit_button" onclick="dispprove('{{ word_to_guess }}')">
+                    Disapprove Word
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="submit_button" onclick="window.location.href = '/';">
+                    Go Home
+                </button>
+            </td>
+        </tr>
     </table>    
 {% endblock %}

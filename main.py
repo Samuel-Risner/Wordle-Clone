@@ -18,10 +18,12 @@ from core.error_pages import render_error, init_error_pages
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
 from core.word_handler import WordHandler
+from core.disapprove_word import Disapprove
 from settings.db import DB
 import settings
 
 word_handler = WordHandler()
+disapprove = Disapprove()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = get_app_secret_key()
@@ -76,6 +78,16 @@ def add_word(game_id: str, word: str):
         return Response(json.dumps(result), mimetype="application/json")
         
     return settings.words.DEFAULT_JSON_RESPONSE
+
+@app.route("/disapprove_word/<word>")
+@login_required
+def disapprove_word(word: str):
+    if not check_word_characters:
+        return ""
+
+    # add_disapproved_word(word, current_user.username) # type: ignore
+
+    return ""
 
 @app.route("/game/result/<game_id>")
 @login_required
