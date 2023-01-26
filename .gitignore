@@ -2,6 +2,7 @@ secret.json
 instance/
 database.db
 disapproved_words.txt
+! static/dist
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

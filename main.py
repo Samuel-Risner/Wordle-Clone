@@ -8,7 +8,7 @@ from flask import request
 from flask_login import LoginManager
 from flask_login import login_user, login_required, logout_user
 from flask_login import current_user
-from flask_assets import Bundle, Environment
+# from flask_assets import Bundle, Environment
 
 from changable_settings import PORT, HOST
 from core.checks import check_game_id, check_word_characters, check_password, check_username, check_language
@@ -28,8 +28,8 @@ disapprove = Disapprove()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = get_app_secret_key()
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{settings.db.NAME}"
 
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{settings.db.NAME}"
 DB.init_app(app)
 create_database(app)
 
@@ -39,10 +39,10 @@ login_manager.init_app(app)
 
 init_error_pages(app)
 
-assets = Environment(app)
-css = Bundle("src/main.css", output="dist/main.css")
-assets.register("css", css)
-css.build()
+# assets = Environment(app)
+# css = Bundle("src/main.css", output="dist/main.css")
+# assets.register("css", css)
+# css.build()
 
 logger = logging.getLogger("main")
 
