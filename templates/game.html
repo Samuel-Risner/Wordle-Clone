@@ -4,17 +4,17 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="/static/css/game.css">
+    <!-- <link rel="stylesheet" href="/static/css/game.css"> -->
 
     <div id="game" class="letter_container"><!-- Gets filled by javascript --></div>
 
     <div id="keyboard" class="keyboard keyboard_contents"><!-- Gets filled by javascript --></div>
     
-    <script type="text/javascript" src="/static/js/game.js"></script>
+    <!-- <script type="text/javascript" src="/static/js/game.js"></script>
     <script type="text/javascript">
         set_stuff("{{ game_id }}", "{{ amount_tries }}", "{{ word_length }}");
         init_game();
         set_progress();
         create_keyboard();
-    </script>
+    </script> -->
 {% endblock %}

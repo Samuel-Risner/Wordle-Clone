@@ -1,3 +1,8 @@
+# tailwindcss
+ ```sh
+ tailwindcss -i ./static/src/main.css -o ./static/dist/main.css --minify
+ ```
+
 # TODO
 
  - [ ] Create a better svg for the delete key

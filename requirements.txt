@@ -3,3 +3,4 @@ Flask-Login
 flask-sqlalchemy
 bcrypt 
 toml # But will try to import "tomllib" instead.
+Flask-Assets
