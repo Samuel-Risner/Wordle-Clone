@@ -7,8 +7,8 @@
     <!-- <link rel="stylesheet" href="/static/css/active_games.css"> -->
 
     <div>
-        <table>
-            <tr>
+        <table class="m-auto mt-16 text-center border-separate border-spacing-x-1">
+            <tr class="bg-gray-400">
                 <th>Game id</th>
                 <th>Language</th>
                 <th>Word length</th>
@@ -19,18 +19,18 @@
             {% if active_games %}
                 {% for game_id, language, word_length, amount_tries, remaining_tries in active_games %}
                     <tr>
-                        <td>
+                        <td class="text-blue-600">
                             <a href="/game/play/{{ game_id }}">
                                 Go!
                             </a>
                         </td>
-                        <td>
+                        <td class="bg-gray-200">
                             {{ language }}
                         </td>
                         <td>
                             {{ word_length }}
                         </td>
-                        <td>
+                        <td class="bg-gray-200">
                             {{ amount_tries }}
                         </td>
                         <td>
