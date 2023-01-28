@@ -4,14 +4,13 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <!-- <link rel="stylesheet" href="/static/css/auth.css"> -->
+    <form method="post" class="fixed top-1/2 left-1/2 m-0 text-center -translate-x-1/2 -translate-y-1/2 text-2xl
+        -z-10">
 
-    <div class="user_input">
-        <div id="to_submit">
-            <form method="post">
-                <button type="submit">Logout</button>
-            </form>
-        </div>
-    </div>
+        <button type="submit" class="text-white bg-sky-500 hover:bg-sky-700 rounded-full pl-6 pr-6 mt-2 pt-1
+            pb-1">
+            Submit
+        </button>
+    </form>
     
 {% endblock %}
