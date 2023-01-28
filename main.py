@@ -290,11 +290,11 @@ def login():
 
         if not username_check[0]:
             flash(username_check[1], category="error")
-            return render_template("login.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=False, title="Login")
         
         if not password_check[0]:
             flash(password_check[1], category="error")
-            return render_template("login.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=False, title="Login")
         
         # plain text username and password instead of url quoted 
         username = username_check[2]
@@ -313,14 +313,14 @@ def login():
         # if the user was not found in the database
         if user is None:
             flash(f"Username '{username}' does not exist.", category="error")
-            return render_template("login.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=False, title="Login")
         
         # check if the passwords match
         passwords_match = check_if_password_matches(password, user.password_hash, user.salt)
 
         if not passwords_match:
             flash(f"Password is incorrect.", category="error")
-            return render_template("login.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=False, title="Login")
         else:
             login_user(user, remember=settings.auth.REMEMBER_USER)
             flash(f"Successfully logged in!", category="success")
@@ -329,7 +329,7 @@ def login():
 
             return redirect(url_for("index"))
 
-    return render_template("login.html", user=current_user)
+    return render_template("sign_up.html", user=current_user, sign_up=False, title="Login")
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
@@ -355,7 +355,7 @@ def sign_up():
         # if the two passwords match
         if password != confirm_password:
             flash("Passwords do not match.", category="error")
-            return render_template("sign_up.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=True)
         
         # check if they have correct formatting
         username_check = check_username(username)
@@ -366,11 +366,11 @@ def sign_up():
 
         if not username_check[0]:
             flash(username_check[1], category="error")
-            return render_template("sign_up.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=True)
         
         if not password_check[0]:
             flash(password_check[1], category="error")
-            return render_template("sign_up.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=True)
 
         if username is None:
             flash("Could not url unquote the username.", category="error")
@@ -384,7 +384,7 @@ def sign_up():
         user = MODEL_USER.query.filter_by(username=username).first()
         if user is not None:
             flash("Username already exists!", category="error")
-            return render_template("sign_up.html", user=current_user)
+            return render_template("sign_up.html", user=current_user, sign_up=True)
 
         # create new user
         password_hash, salt = generate_password_hash(password)
@@ -399,7 +399,7 @@ def sign_up():
 
         return (redirect(url_for("index")))
 
-    return render_template("sign_up.html", user=current_user)
+    return render_template("sign_up.html", user=current_user, sign_up=True)
 
 if __name__ == "__main__":
     # app.run(port=PORT, host=HOST)

@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        Sign Up
+    {% endif %}
+{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
@@ -16,10 +22,12 @@
         <input type="password" name="password" class="border-gray-200 border-2 bg-gray-100">
         <br>
 
-        <label for="confirm_password">Confirm password:</label>
-        <br>
-        <input type="password" name="confirm_password" class="border-gray-200 border-2 bg-gray-100">
-        <br>
+        {% if sign_up %}
+            <label for="confirm_password">Confirm password:</label>
+            <br>
+            <input type="password" name="confirm_password" class="border-gray-200 border-2 bg-gray-100">
+            <br>
+        {% endif %}
 
         <button type="submit" class="text-white bg-sky-500 hover:bg-sky-700 rounded-full pl-6 pr-6 mt-2 pt-1
             pb-1">
