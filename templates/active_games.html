@@ -4,41 +4,37 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <!-- <link rel="stylesheet" href="/static/css/active_games.css"> -->
-
-    <div>
-        <table class="m-auto mt-16 text-center border-separate border-spacing-x-1">
-            <tr class="bg-gray-400">
-                <th>Game id</th>
-                <th>Language</th>
-                <th>Word length</th>
-                <th>Amount of tries</th>
-                <th>Tries remaining</th>
-            </tr>
-            
-            {% if active_games %}
-                {% for game_id, language, word_length, amount_tries, remaining_tries in active_games %}
-                    <tr>
-                        <td class="text-blue-600">
-                            <a href="/game/play/{{ game_id }}">
-                                Go!
-                            </a>
-                        </td>
-                        <td class="bg-gray-200">
-                            {{ language }}
-                        </td>
-                        <td>
-                            {{ word_length }}
-                        </td>
-                        <td class="bg-gray-200">
-                            {{ amount_tries }}
-                        </td>
-                        <td>
-                            {{ remaining_tries }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            {% endif %}
-        </table>
-    </div>
+    <table class="m-auto mt-16 text-center border-separate border-spacing-x-1 md:text-4xl text-sm">
+        <tr class="bg-gray-400">
+            <th class="md:p-2">Game id</th>
+            <th class="md:p-2">Language</th>
+            <th class="md:p-2">Word length</th>
+            <th class="md:p-2">Amount of tries</th>
+            <th class="md:p-2">Tries remaining</th>
+        </tr>
+        
+        {% if active_games %}
+            {% for game_id, language, word_length, amount_tries, remaining_tries in active_games %}
+                <tr>
+                    <td class="text-blue-600 p-1">
+                        <a href="/game/play/{{ game_id }}">
+                            Go!
+                        </a>
+                    </td>
+                    <td class="bg-gray-200 p-1">
+                        {{ language }}
+                    </td>
+                    <td class="p-1">
+                        {{ word_length }}
+                    </td>
+                    <td class="bg-gray-200 p-1">
+                        {{ amount_tries }}
+                    </td>
+                    <td class="p-1">
+                        {{ remaining_tries }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
 {% endblock %}
