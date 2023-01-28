@@ -1,22 +1,14 @@
-var element_hidden = true;
 function toggle_dropdown() {
-    var dropdown_element = document.getElementById("dropdown");
-    var bg_colour_element = document.getElementById("navbar_bg_colour");
-    if (dropdown_element === null) {
-        console.error("Could not retreive the html element with the id: 'dropdown'.");
+    var nav_hidden = document.getElementById("navbar_hidden");
+    var nav_show = document.getElementById("navbar_show");
+    if (nav_hidden === null) {
+        console.error("Could not retreive the html element with the id: 'nav_hidden'.");
         return;
     }
-    if (bg_colour_element === null) {
-        console.error("Could not retreive the html element with the id: 'navbar_bg_colour'.");
+    if (nav_show === null) {
+        console.error("Could not retreive the html element with the id: 'navbar_show'.");
         return;
     }
-    if (element_hidden) {
-        dropdown_element.hidden = false;
-        bg_colour_element.className = "navbar bg_clolour_show";
-    }
-    else {
-        dropdown_element.hidden = true;
-        bg_colour_element.className = " navbar bg_clolour_hide";
-    }
-    element_hidden = !element_hidden;
+    nav_hidden.hidden = !nav_hidden.hidden;
+    nav_show.hidden = !nav_show.hidden;
 }
