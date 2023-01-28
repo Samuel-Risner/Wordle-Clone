@@ -11,7 +11,7 @@
 </head>
 <body>    
     <script type="text/javascript" src="/static/js/navbar.js"></script>
-    <!-- <script type="text/javascript" src="/static/js/remove_element.js"></script> -->
+    <script type="text/javascript" src="/static/js/remove_element.js"></script>
 
     <nav class="fixed top-0 left-0 h-screen bg-transparent">
         <div id="navbar_hidden">
@@ -71,32 +71,25 @@
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <link rel="stylesheet" href="/static/css/flashed_messages.css">
-
-            {% for category, message in messages %}
-                {% if category == "error" %}
-                    <div id="{{ loop.index }}" class="flashed error">
+            <div class="float-right text-2xl">
+                {% for category, message in messages %}
+                    <div id="{{ loop.index }}" class="pr-5 pl-5 pt-2 pb-2 m-1 rounded-full text-center break-all
+                        {% if category == 'error' %}
+                            bg-red-500
+                        {% elif category == 'success' %}
+                            bg-green-500
+                        {% else %}
+                            bg-blue-500
+                        {% endif %}
+                        ">
                         {{ message }}
                         <button onclick="remove_element('{{ loop.index }}')">
                             <span>&times;</span>
                         </button>
                     </div>
-                {% elif category == "success" %}
-                    <div id="{{ loop.index }}" class="flashed success">
-                        {{ message }}
-                        <button onclick="remove_element('{{ loop.index }}')">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                {% else %}
-                    <div id="{{ loop.index }}" class="flashed info">
-                        {{ message }}
-                        <button onclick="remove_element('{{ loop.index }}')">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
+                <br>
+            </div>
         {% endif %}
     {% endwith %}
 
