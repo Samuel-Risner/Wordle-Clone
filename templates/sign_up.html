@@ -1,31 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Sign up{% endblock %}
+{% block title %}Sign Up{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <!-- <link rel="stylesheet" href="/static/css/auth.css"> -->
-    
-    <div class="user_input">
-        <form method="post" id="to_submit">
-            <label for="username">Enter username:</label>
-            <br>
-            <input type="text" id="username" name="username">
-            <br>
+    <form method="post" class="fixed top-1/2 left-1/2 m-0 text-center -translate-x-1/2 -translate-y-1/2 text-2xl
+        bg-blue-50 p-5 rounded-md -z-10">
+        <label for="username">Enter username:</label>
+        <br>
+        <input type="text" name="username" class="border-gray-200 border-2 bg-gray-100">
+        <br>
 
-            <label for="password">Enter password:</label>
-            <br>
-            <input type="password" id="password" name="password">
-            <br>
+        <label for="password">Enter password:</label>
+        <br>
+        <input type="password" name="password" class="border-gray-200 border-2 bg-gray-100">
+        <br>
 
-            <label for="confirm_password">Confirm password:</label>
-            <br>
-            <input type="password" id="confirm_password" name="confirm_password">
-            <br>
+        <label for="confirm_password">Confirm password:</label>
+        <br>
+        <input type="password" name="confirm_password" class="border-gray-200 border-2 bg-gray-100">
+        <br>
 
-            <button type="submit">
-                Submit
-            </button>
-        </form>
-    </div>
+        <button type="submit" class="text-white bg-sky-500 hover:bg-sky-700 rounded-full pl-6 pr-6 mt-2 pt-1
+            pb-1">
+            Submit
+        </button>
+    </form>
 {% endblock %}
