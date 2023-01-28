@@ -3,18 +3,16 @@
 {% block title %}select language{% endblock %}
 {% block language %}en{% endblock %}
 
-{% block content %}
-    <!-- <link rel="stylesheet" href="/static/css/select_game_language.css"> -->
-    
-    <div>
+{% block content %}    
+    <div class="text-center">
         {% if languages is defined %}
             {% for language in languages %}
-            <a href="{{select_game_size_url}}{{language}}">
-                <button class="language_button">
-                    {{ language }}
-                </button>
-            </a>
-                
+                <a href="{{select_game_size_url}}{{language}}">
+                    <button class="aspect-square border-gray-200 border-8 text-9xl p-2 m-2 w-1/2">
+                        {{ language }}
+                    </button>
+                </a>
+                <br>
             {% endfor %}
         {% endif %}
     </div>
