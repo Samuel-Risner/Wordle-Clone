@@ -4,66 +4,70 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <!-- <link rel="stylesheet" href="/static/css/select_game_stuff.css"> -->
-    <!-- <script type="text/javascript" src="/static/js/display_input_value.js"></script> -->
+    <script type="text/javascript" src="/static/js/display_input_value.js"></script>
 
-    <table>
-        <tr>
-            <td>
-                Selected language: {{ language }}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <a href="{{ select_language_url }}">
-                    Go back to select another language.
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <form method="post">
-                <tr>
-                    <td>
-                        <label for="word_length">The length of the word:</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select id="word_length" name="word_length">
-                            {% for word_length in word_lengths %}
-                                <option value="{{ word_length }}"> {{ word_length}} </option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="amount_tries">The amount of tries for guessing the word:</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="range" id="amount_tries" name="amount_tries" min="{{ min_tries}}"
-                        max="{{ max_tries }}" oninput="display_input_value('amount_tries', 'amount_tries_output')"
-                        step="1">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="amount_tries_output"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="submit" class="submit_button">Submit</button>
-                    </td>
-                </tr>
-            </form>
-        </tr>
-    </table>
+    <div class="fixed top-1/2 left-1/2 m-0 text-center -translate-x-1/2 -translate-y-1/2 text-2xl bg-blue-50 p-5
+        rounded-md -z-10 w-fit">
+        <table>
+            <tr>
+                <td>
+                    Selected language: {{ language }}
+                </td>
+            </tr>
+            <tr class="text-blue-600">
+                <td>
+                    <a href="{{ select_language_url }}">
+                        Go back to select another language.
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <form method="post">
+                    <tr>
+                        <td>
+                            <label for="word_length">The length of the word:</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="word_length" name="word_length">
+                                {% for word_length in word_lengths %}
+                                    <option value="{{ word_length }}"> {{ word_length}} </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="amount_tries">The amount of tries for guessing the word:</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="range" id="amount_tries" name="amount_tries" min="{{ min_tries}}"
+                            max="{{ max_tries }}" oninput="display_input_value('amount_tries', 'amount_tries_output')"
+                            step="1">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="amount_tries_output"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" class="text-white bg-sky-500 hover:bg-sky-700 rounded-full
+                                pl-6 pr-6 mt-2 pt-1 pb-1">
+                                Submit
+                            </button>
+                        </td>
+                    </tr>
+                </form>
+            </tr>
+        </table>
+    </div>
 
     <script type="text/javascript">
-        display_input_value("word_length", "word_length_value");
         display_input_value("amount_tries", "amount_tries_output");
     </script>
 {% endblock %}
