@@ -4,21 +4,19 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-    <!-- <link rel="stylesheet" href="/static/css/active_games.css"> -->
-
-    <table>
-        <tr>
-            <th>Language</th>
-            <th>Word Length</th>
-            <th>Amount Tries</th>
-            <th>Completed</th>
+    <table class="m-auto mt-16 text-center border-separate border-spacing-x-1 md:text-4xl text-sm">
+        <tr class="bg-gray-400">
+            <th class="md:p-2">Language</th>
+            <th class="md:p-2">Word Length</th>
+            <th class="md:p-2">Amount Tries</th>
+            <th class="md:p-2">Completed</th>
         </tr>
         {% for language, word_length, amount_tries, completed in stuff %}
             <tr>
-                <td>{{ language }}</td>
-                <td>{{ word_length }}</td>
-                <td>{{ amount_tries }}</td>
-                <td>{{ completed }}</td>
+                <td class="p-1">{{ language }}</td>
+                <td class="bg-gray-200 p-1">{{ word_length }}</td>
+                <td class="p-1">{{ amount_tries }}</td>
+                <td class="bg-gray-200 p-1">{{ completed }}</td>
             </tr>
         {% endfor %}
     </table>
