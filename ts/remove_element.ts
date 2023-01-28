@@ -1,6 +1,6 @@
 /**
  * Removes a html element with the passed id.
- * @param element_id The id of the lement to remove.
+ * @param element_id The id of the element to remove.
  */
 function remove_element(element_id: string): void {
     let element: HTMLElement | null = document.getElementById(element_id);
