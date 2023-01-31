@@ -189,7 +189,7 @@ class WordHandler():
         return word.victory, word.word, word.amount_tries, word.remaining_tries
     
     def get_active_games(self, user_id: int) -> list[tuple[str, str, int, int, int]] | None:
-        """Returns a lsit cantaining no or more active games. Each active game is another list consisting of:
+        """Returns a lsit cantaining no or more active games. Each active game is another tuple consisting of:
             - The game id / unique id
             - The language
             - The length of the word
@@ -205,7 +205,7 @@ class WordHandler():
         if user is None:
             return None
         
-        to_return = list()
+        to_return: list[tuple[str, str, int, int, int]] = list()
         for game_id in user:
             to_return.append(list())
             to_return[-1].append(game_id)
@@ -244,7 +244,7 @@ class WordHandler():
 
         return results
     
-    def get_supported_languages(self) -> list:
+    def get_supported_languages(self) -> list[str]:
         """Returns a list containing the abbreviations for the supported languages."""
 
         return self.word_loader.supported_languages

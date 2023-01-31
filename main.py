@@ -6,8 +6,8 @@ from flask import Flask, Response
 from flask import render_template, redirect, flash, url_for
 from flask import request
 from flask_login import LoginManager
-from flask_login import login_user, login_required, logout_user
-from flask_login import current_user
+from flask_login import login_user, login_required, logout_user # type: ignore
+from flask_login import current_user # type: ignore
 
 from changable_settings import PORT, HOST
 from core.checks import check_game_id, check_word_characters, check_password, check_username, check_language
@@ -34,19 +34,19 @@ create_database(app)
 
 login_manager = LoginManager()
 login_manager.login_view = "login" # type: ignore
-login_manager.init_app(app)
+login_manager.init_app(app) # type: ignore
 
 init_error_pages(app)
 
 logger = logging.getLogger("main")
 
-@login_manager.user_loader
-def load_user(user_id):
-    return MODEL_USER.query.get(int(user_id))
+@login_manager.user_loader # type: ignore
+def load_user(user_id): # type: ignore 
+    return MODEL_USER.query.get(int(user_id))  # type: ignore
 
 @app.route("/json/get_progress/<game_id>", methods=["POST", "GET"])
-@login_required
-def get_progress(game_id: str):
+@login_required # type: ignore 
+def get_progress(game_id: str) -> Response:
     """Either returns the tries the user made dumped as json or "None" dumped as json when something went wromg."""
 
     if not check_game_id(game_id):
@@ -60,7 +60,7 @@ def get_progress(game_id: str):
     return Response(json.dumps(progress), mimetype="application/json")
 
 @app.route("/json/add_word/<game_id>/<word>")
-@login_required
+@login_required # type: ignore 
 def add_word(game_id: str, word: str):
     """Either returns the result of the try the user made dumped as json or "None" dumped as json when something went wromg."""
 
@@ -80,9 +80,9 @@ def add_word(game_id: str, word: str):
     return settings.words.DEFAULT_JSON_RESPONSE
 
 @app.route("/disapprove_word/<word>")
-@login_required
+@login_required # type: ignore 
 def disapprove_word(word: str):
-    if not check_word_characters:
+    if not check_word_characters(word):
         return ""
 
     # add_disapproved_word(word, current_user.username) # type: ignore
@@ -90,7 +90,7 @@ def disapprove_word(word: str):
     return ""
 
 @app.route("/game/result/<game_id>")
-@login_required
+@login_required # type: ignore 
 def game_result(game_id: str):
     """Returns a rendered page for viewing the game result, deletes the game and adds a try to the database."""
 
@@ -103,11 +103,11 @@ def game_result(game_id: str):
     if word_info is None:
         return render_error(400)
 
-    scores: list = current_user.score # type: ignore
+    scores: list[MODEL_SCORE] = current_user.score # type: ignore
     for s in scores:
         if (s.word_length == len(word_info[1])) and (s.tries == word_info[2]):
             s.completed += 1
-            DB.session.commit()
+            DB.session.commit() # type: ignore 
             break
 
     return render_template(
@@ -120,7 +120,7 @@ def game_result(game_id: str):
     )
 
 @app.route("/game/play/<game_id>")
-@login_required
+@login_required # type: ignore 
 def game(game_id: str):
     """Returns a rendered page for playing the game. A error page if the game id `game_id` does not exist for the user."""
 
@@ -141,7 +141,7 @@ def game(game_id: str):
     )
 
 @app.route("/game/setup/<language>", methods=["GET", "POST"])
-@login_required
+@login_required # type: ignore 
 def select_game_size(language: str):
     """Returns a rendered templatefor game setup when `GET`is used, when `POST` is uded a new game is created and the
     user is redirected and an entry for the game is added to the database linked to the user."""
@@ -170,7 +170,7 @@ def select_game_size(language: str):
             return render_error(404)
         
         if word_length in word_lengths:
-            scores: list = current_user.score # type: ignore
+            scores: list[MODEL_SCORE] = current_user.score # type: ignore
             already_exists = False
 
             for s in scores:
@@ -187,8 +187,8 @@ def select_game_size(language: str):
                     user_id=current_user.id # type: ignore 
                 )
 
-                DB.session.add(score)
-                DB.session.commit()
+                DB.session.add(score) # type: ignore 
+                DB.session.commit() # type: ignore 
 
             game_id = word_handler.new_word(
                 current_user.id, # type: ignore
@@ -212,7 +212,7 @@ def select_game_size(language: str):
     )
 
 @app.route("/game/choose_language")
-@login_required
+@login_required # type: ignore 
 def select_game_language():
     """Returns a rendered page for selecting the game language. The user is redirected from the page by using buttons."""
 
@@ -224,7 +224,7 @@ def select_game_language():
     )
 
 @app.route("/active_games")
-@login_required
+@login_required # type: ignore 
 def active_games():
     """Returns a rendered template displaying the games the user currently has runnung."""
 
@@ -233,7 +233,7 @@ def active_games():
     return render_template("active_games.html", active_games=games, user=current_user)
 
 @app.route("/unviewed_scores")
-@login_required
+@login_required # type: ignore 
 def unviewed_scores():
     """Returns a rendered template displaying the scores/ game results the user hasn't seen yet."""
 
@@ -246,9 +246,9 @@ def unviewed_scores():
     )
 
 @app.route("/stats")
-@login_required
+@login_required # type: ignore 
 def stats():
-    stuff = list()
+    stuff: list[tuple[str, int, int, int]] = list()
 
     scores: list[MODEL_SCORE] = current_user.score # type: ignore 
 
@@ -308,7 +308,7 @@ def login():
             return render_error(400)
         
         # get the user from the database
-        user = MODEL_USER.query.filter_by(username=username).first()
+        user: MODEL_USER | None = MODEL_USER.query.filter_by(username=username).first() # type: ignore 
 
         # if the user was not found in the database
         if user is None:
@@ -332,7 +332,7 @@ def login():
     return render_template("sign_up.html", user=current_user, sign_up=False, title="Login")
 
 @app.route("/logout", methods=["GET", "POST"])
-@login_required
+@login_required # type: ignore 
 def logout():
     if request.method == "POST":        
         logout_user()
@@ -381,7 +381,7 @@ def sign_up():
             return render_error(400)
 
         # if the user already exists
-        user = MODEL_USER.query.filter_by(username=username).first()
+        user: MODEL_USER | None = MODEL_USER.query.filter_by(username=username).first() # type: ignore 
         if user is not None:
             flash("Username already exists!", category="error")
             return render_template("sign_up.html", user=current_user, sign_up=True)
@@ -389,8 +389,8 @@ def sign_up():
         # create new user
         password_hash, salt = generate_password_hash(password)
         new_user = MODEL_USER(username=username, password_hash=password_hash, salt=salt)
-        DB.session.add(new_user)
-        DB.session.commit()
+        DB.session.add(new_user) # type: ignore 
+        DB.session.commit() # type: ignore 
         login_user(new_user, remember=settings.auth.REMEMBER_USER)
 
         flash("Account created! And logged in!", category="success")
