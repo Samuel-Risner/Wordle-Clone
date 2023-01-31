@@ -1,8 +1,15 @@
-# tailwindcss
+# compile tailwind
+
  ```sh
  tailwindcss -i ./static/src/main.css -o ./static/dist/main.css --minify
  ```
 
+# compile typescript
+
+ ```sh
+ tsc -p "./tsconfig.json"
+ ```
+ 
 # TODO
 
  - [ ] Create a better svg for the delete key

@@ -8,13 +8,11 @@
 
     <div id="game" class="letter_container"><!-- Gets filled by javascript --></div>
 
-    <div id="keyboard" class="keyboard keyboard_contents"><!-- Gets filled by javascript --></div>
+    <div id="keyboard" class="w-screen"><!-- Gets filled by javascript --></div>
+
+    <div id="game_id" hidden>{{ game_id }}</div>
+    <div id="amount_tries" hidden>{{ amount_tries }}</div>
+    <div id="word_length" hidden>{{ word_length }}</div>
     
-    <!-- <script type="text/javascript" src="/static/js/game.js"></script>
-    <script type="text/javascript">
-        set_stuff("{{ game_id }}", "{{ amount_tries }}", "{{ word_length }}");
-        init_game();
-        set_progress();
-        create_keyboard();
-    </script> -->
+    <script type="module" src="/static/js/game.js"></script>
 {% endblock %}

@@ -1,3 +1,7 @@
+"use strict";
+/**
+ * Toggles if the navbar is collapsed or not.
+ */
 function toggle_dropdown() {
     var nav_hidden = document.getElementById("navbar_hidden");
     var nav_show = document.getElementById("navbar_show");
