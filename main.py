@@ -17,13 +17,11 @@ from core.db_models import Score as MODEL_SCORE
 from core.error_pages import render_error, init_error_pages
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
-from core.word_handler import WordHandler
-from core.disapprove_word import Disapprove
+from core.user_handler import UserHandler
 from settings.db import DB
 import settings
 
-word_handler = WordHandler()
-disapprove = Disapprove()
+user_handler = UserHandler()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = get_app_secret_key()
@@ -52,7 +50,7 @@ def get_progress(game_id: str) -> Response:
     if not check_game_id(game_id):
         return settings.words.DEFAULT_JSON_RESPONSE
     
-    progress = word_handler.get_word_progress(current_user.id, game_id) # type: ignore
+    progress = user_handler.get_word_progress(current_user.id, game_id) # type: ignore
     
     if progress is None:
         return settings.words.DEFAULT_JSON_RESPONSE
@@ -67,11 +65,11 @@ def add_word(game_id: str, word: str):
     if (not check_game_id(game_id)) or (not check_word_characters(word)):
         return settings.words.DEFAULT_JSON_RESPONSE
     
-    success, result = word_handler.do_try(current_user.id, game_id, word) # type: ignore
+    success, result = user_handler.do_try(current_user.id, game_id, word) # type: ignore
 
     # defeat or victory / game over
     if success in (1, 2, -6):
-        word_handler.finish_word(current_user.id, game_id) # type: ignore
+        user_handler.finish_word(current_user.id, game_id) # type: ignore
     
     # no error occured
     if (success >= 0):
@@ -97,8 +95,8 @@ def game_result(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
     
-    word_info = word_handler.get_word_finished_info(current_user.id, game_id) # type: ignore
-    word_handler.remove_word(current_user.id, game_id) # type: ignore
+    word_info = user_handler.get_word_finished_info(current_user.id, game_id) # type: ignore
+    user_handler.remove_word(current_user.id, game_id) # type: ignore
 
     if word_info is None:
         return render_error(400)
@@ -127,7 +125,7 @@ def game(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
 
-    word = word_handler.get_word(current_user.id, game_id) # type: ignore
+    word = user_handler.get_word(current_user.id, game_id) # type: ignore
 
     if word is None:
         return render_error(404)
@@ -149,7 +147,7 @@ def select_game_size(language: str):
     if not check_language(language):
         return render_error(400)
 
-    if language not in word_handler.get_supported_languages():
+    if language not in user_handler.get_supported_languages():
         return render_error(400)
     
     if request.method == "POST":
@@ -165,7 +163,7 @@ def select_game_size(language: str):
         except ValueError:
             return render_error(400)
         
-        word_lengths = word_handler.get_word_lengths(language)
+        word_lengths = user_handler.get_word_lengths(language)
         if word_lengths is None:
             return render_error(404)
         
@@ -190,7 +188,7 @@ def select_game_size(language: str):
                 DB.session.add(score) # type: ignore 
                 DB.session.commit() # type: ignore 
 
-            game_id = word_handler.new_word(
+            game_id = user_handler.new_word(
                 current_user.id, # type: ignore
                 word_length,
                 amount_tries,
@@ -205,7 +203,7 @@ def select_game_size(language: str):
         "select_game_stuff.html",
         language=language,
         select_language_url=url_for("select_game_language"),
-        word_lengths = word_handler.get_word_lengths(language),
+        word_lengths = user_handler.get_word_lengths(language),
         min_tries=settings.words.MIN_TRIES,
         max_tries=settings.words.MAX_TRIES,
         user=current_user
@@ -218,7 +216,7 @@ def select_game_language():
 
     return render_template(
         "select_game_language.html",
-        languages=word_handler.get_supported_languages(),
+        languages=user_handler.get_supported_languages(),
         select_game_size_url=url_for("select_game_size", language=""),
         user=current_user
     )
@@ -228,7 +226,7 @@ def select_game_language():
 def active_games():
     """Returns a rendered template displaying the games the user currently has runnung."""
 
-    games = word_handler.get_active_games(current_user.id) # type: ignore
+    games = user_handler.get_active_games(current_user.id) # type: ignore
 
     return render_template("active_games.html", active_games=games, user=current_user)
 
@@ -237,7 +235,7 @@ def active_games():
 def unviewed_scores():
     """Returns a rendered template displaying the scores/ game results the user hasn't seen yet."""
 
-    game_ids = word_handler.get_unviewed_scores(current_user.id) # type: ignore
+    game_ids = user_handler.get_unviewed_scores(current_user.id) # type: ignore
 
     return render_template(
         "unviewed_scores.html",

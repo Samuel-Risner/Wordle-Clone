@@ -1,11 +1,13 @@
-import secrets, logging
+import secrets, logging, time
 
 from settings import words
+import settings
 
 from ._word_loader import WordLoader
 from ._word import Word
+from ._user import User
 
-class WordHandler():
+class UserHandler():
 
     def __init__(self):
         self.logger = logging.getLogger("word_handler")
@@ -13,11 +15,11 @@ class WordHandler():
         self.word_loader = WordLoader()
 
         self.active_words: dict[str, Word] = dict()
-        """The keys are unique ids and the values "Word" objects."""
+        """The keys are unique ids and the values are "Word" objects corresponding to the ids."""
         self.finished_words: dict[str, Word] = dict()
-        """The keys are unique ids and the values "Word" objects."""
-        self.users: dict[int, list[str]] = dict()
-        """The keys are user ids and the values game ids."""
+        """The keys are unique ids and the values are "Word" objects corresponding to the ids."""
+        self.users: dict[int, User] = dict()
+        """The keys are user ids and the values are "User" objects."""
         self.unique_ids: set[str] = set()
         """Contains all the unique ids."""
     
@@ -39,7 +41,15 @@ class WordHandler():
                 return the_id
 
     def new_word(self, user_id: int, amount_letters: int, amount_tries: int, language: str) -> str | None:
-        """Creates a new word and returns the words unique id."""
+        """Creates a new word and returns the words unique id. "None" is returned if no word matches the requirements for the passed arguments
+        (the last three ones).
+        
+        - `user_id`: The id of the user who is creating the new word.
+        - `amount_letters`: How many letters the word should have.
+        - `amount_tries`: How many times the user can guess the word before they lose.
+        - `language`: The language from which the word should be chosen.
+        
+        When a new word is created its unique id is added to the "User" object in "self.users". If there is no object for the user a new one is created."""
 
         word = self.word_loader.get_random_word(amount_letters, language)
 
@@ -53,20 +63,22 @@ class WordHandler():
         self.active_words[unique_id] = word_object
 
         if user_id in self.users:
-            self.users[user_id].append(unique_id)
+            self.users[user_id].unique_ids.append(unique_id)
         else:
-            self.users[user_id] = [unique_id]
+            user = User()
+            user.unique_ids.append(unique_id)
+            self.users[user_id] = user
 
         return unique_id
     
     def get_word_progress(self, user_id: int, game_id: str) -> list[tuple[str, list[int]]] | None:
         """Returns the progress the user has made in guessing the word. If the word with the unique id `game_id` isn't
-        active or the user id `user_id` doesn't correspond to the game `None` is returned.
+        active (in "self.active_words") or the user id `user_id` doesn't correspond to the game "None" is returned.
 
-        Otherwise a list with the progress is returned. The list consists of one ore more guesses, each guess consists
-        of a string, the guessed word, and a list with integers. Each integer gives information about the corresponding
+        Otherwise a list with the progress is returned. The list consists of zero ore more guesses, each guess (a tuple) consists
+        of a string which is the guessed word and a list with integers. Each integer gives information about the corresponding
         letter of the guessed word:
-            - 0 -> The letter does not occur in theword.
+            - 0 -> The letter does not occur in the word.
             - 1 -> The letter occurs in the word but isn't at the right position.
             - 2 -> The letter occurs in word and is at the right position."""
 
@@ -79,8 +91,8 @@ class WordHandler():
         return word.get_progress()
     
     def get_word(self, user_id: int, game_id: str) -> Word | None:
-        """Returns the "Word" object corresponding to the unique id `game_id`. If the word is not active or the user id
-        `user_id` does not match the word `None` is returned."""
+        """Returns the "Word" object corresponding to the unique id `game_id`. If the word is not active (in "self.active_words") or the user id
+        `user_id` does not correspond to the word "None" is returned."""
 
         word = self.active_words.get(game_id)
 
@@ -150,7 +162,7 @@ class WordHandler():
         return True
 
     def remove_word(self, user_id: int, game_id: str) -> bool:
-        """Removes a word from "self.finished_words", its unique id from "self.unique_ids" and also from "self.users".
+        """Removes a word from "self.finished_words", its unique id from "self.unique_ids" and also from the "User" object in "self.users".
         `True` is returned if the action was successfull, `False` when it wasn't or the user id `user_id` doesn't match
         the one of the word."""
 
@@ -163,7 +175,7 @@ class WordHandler():
             return False
 
         self.finished_words.pop(game_id)
-        self.users[user_id].remove(game_id)
+        self.users[user_id].unique_ids.remove(game_id)
         self.unique_ids.remove(game_id)
 
         return True
@@ -188,13 +200,13 @@ class WordHandler():
         
         return word.victory, word.word, word.amount_tries, word.remaining_tries
     
-    def get_active_games(self, user_id: int) -> list[tuple[str, str, int, int, int]] | None:
-        """Returns a lsit cantaining no or more active games. Each active game is another tuple consisting of:
+    def get_active_games(self, user_id: int) -> list[tuple[str, str, str, int, int]] | None:
+        """Returns a list cantaining zero or more active games. Each active game is a tuple consisting of:
             - The game id / unique id
-            - The language
-            - The length of the word
-            - The amount tries the user has to guess the word
-            - The remaining tries the user has to guess the game.
+            - The language from which the word comes
+            - The word the user has to guess
+            - The amount of tries the user has to guess the word
+            - The remaining tries the user has to guess the word.
 
         `None` is returned if the user does not exist (shouldn't happen).
 
@@ -205,21 +217,16 @@ class WordHandler():
         if user is None:
             return None
         
-        to_return: list[tuple[str, str, int, int, int]] = list()
-        for game_id in user:
-            to_return.append(list())
-            to_return[-1].append(game_id)
+        to_return: list[tuple[str, str, str, int, int]] = list()
+
+        for game_id in user.unique_ids:
 
             game = self.active_words.get(game_id)
 
             if game is None:
-                to_return.pop()
                 continue
 
-            to_return[-1].append(game.language)
-            to_return[-1].append(len(game.word))
-            to_return[-1].append(game.amount_tries)
-            to_return[-1].append(game.remaining_tries)
+            to_return.append((game_id, game.language, game.word, game.amount_tries, game.remaining_tries))
 
         return to_return
     
@@ -236,7 +243,7 @@ class WordHandler():
         
         results: list[str] = list()
 
-        for game_id in user:
+        for game_id in user.unique_ids:
             game = self.finished_words.get(game_id)
 
             if game is not None:
@@ -253,3 +260,31 @@ class WordHandler():
         """Returns a list with the loaded word lengths. "None" is returned if the language is not supported."""
         
         return self.word_loader.get_word_lengths(language)
+    
+    def disapprove_word(self, user_id: int, word: str) -> bool:
+        def _can_submit(current_time: int, entrys: list[int]) -> bool:
+            to_remove: list[int] = list()
+
+            for entry in entrys:
+                if current_time - entry > settings.disapprove.PERIOD_IN_S: to_remove.append(entry)
+                else: break
+            
+            for entry in to_remove: entrys.remove(entry)
+
+            return len(entrys) < settings.disapprove.MAXIMUM_ENTRYS_PER_PERIOD
+            
+        current_time = int(time.time())
+        user = self.users.get(user_id)
+
+        if user is None: return False
+        
+        entrys = user.reported_words
+
+        if not _can_submit(current_time, entrys): return False
+        
+        entrys.append(current_time)
+
+        with open(settings.disapprove.PATH_TO_FILE, "a") as d:
+            d.write(f"{word}\n")
+                
+        return True
