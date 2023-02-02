@@ -6,9 +6,8 @@
 {% block content %}
     <!-- <link rel="stylesheet" href="/static/css/game.css"> -->
 
-    <div id="game" class="letter_container"><!-- Gets filled by javascript --></div>
-
-    <div id="keyboard" class="w-screen"><!-- Gets filled by javascript --></div>
+    <div id="game" class="overflow-y-scroll pb-[40vh] 2xl:pb-0"><!-- Gets filled by javascript --></div>
+    <div id="keyboard" class="w-screen fixed bottom-0 left-0 sm:hidden bg-white"><!-- Gets filled by javascript --></div>
 
     <div id="game_id" hidden>{{ game_id }}</div>
     <div id="amount_tries" hidden>{{ amount_tries }}</div>

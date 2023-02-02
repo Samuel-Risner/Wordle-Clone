@@ -1,7 +1,13 @@
 import { create_game_field } from "./game/create_game_field.js";
-// import { create_keyboard } from "./game/create_keyboard.js";
+import { create_keyboard } from "./game/create_keyboard.js";
 import { info_tracker } from "./game/info_tracker.js";
-import { test } from "./game/test.js";
+// import { test } from "./game/test.js";
+
+create_keyboard(
+    (_:string) => {},
+    () => {},
+    () => {}
+)
 
 create_game_field(
     info_tracker.letters,
