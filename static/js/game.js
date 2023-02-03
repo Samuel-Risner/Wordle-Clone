@@ -31,7 +31,18 @@ function add_letter(letter) {
     info_tracker.current_letter[0] = info_tracker.current_letter[0] + 1;
     info_tracker.current_word = info_tracker.current_word + letter;
 }
-create_keyboard(add_letter, () => { }, () => { });
+/**
+ * Removes the last letter that was entered into the ui, aslong as the entered word wasn't submited.
+ */
+function delete_button() {
+    if (info_tracker.current_letter[0] <= 0) {
+        return;
+    }
+    info_tracker.current_word = info_tracker.current_word.substring(0, info_tracker.current_word.length - 1);
+    info_tracker.current_letter[0] = info_tracker.current_letter[0] - 1;
+    info_tracker.letters[info_tracker.current_letter[1]][info_tracker.current_letter[0]].textContent = "";
+}
+create_keyboard(add_letter, () => { }, delete_button);
 create_game_field(info_tracker.letters, info_tracker.WORD_LENGTH, info_tracker.amount_tries, info_tracker.GAME);
 set_progress(info_tracker.GAME_ID, info_tracker.letters, () => {
     // Set the users current progress.
@@ -55,17 +66,6 @@ set_progress(info_tracker.GAME_ID, info_tracker.letters, () => {
 //  *      > 1: letter occurs in word but isn't at the right position
 //  *      > 2: letter occurs in the word and is at the right position.
 //  */
-// /**
-//  * Removes the last letter that was entered into the ui, aslong as the entered word wasn't submited.
-//  */
-// function _remove_letter(): void {
-//     if (current_letter[0] <= 0) {
-//         return;
-//     }
-//     current_word = current_word.substring(0, current_word.length - 1);
-//     current_letter[0] = current_letter[0] - 1;
-//     letters[current_letter[1]][current_letter[0]].textContent = "";
-// }
 // /**
 //  * @returns A promise with json data containing the matches for the characters with the guessed word.
 //  */
