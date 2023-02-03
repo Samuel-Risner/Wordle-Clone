@@ -7,11 +7,11 @@ export { colour_key, colour_letter };
  */
 function _colour_element(element: HTMLElement, num: number): void {
     if (num == 0) {
-        element.className = "";
+        element.style.backgroundColor = "red";
     } else if (num == 1) {
-        element.className = "";
+        element.style.backgroundColor = "yellow";
     } else if (num == 2) {
-        element.className = "";
+        element.style.backgroundColor = "green";
     }
 }
 

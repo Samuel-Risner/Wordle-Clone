@@ -23,7 +23,7 @@ function create_game_field(tiles, word_length, amount_tries, append_to) {
             let div = document.createElement("div");
             cell.appendChild(div);
             row_list.push(div);
-            div.textContent = "W";
+            div.textContent = "";
             div.className = "aspect-square text-[" + font_size + "vw] border-4 border-grey-500 w-[" + cell_width + "vw]";
         }
     }

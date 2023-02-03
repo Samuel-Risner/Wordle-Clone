@@ -8,13 +8,12 @@ import { info_tracker } from "./game/info_tracker.js";
  * Returns the position were the user stopped playing the game.
  */
 function set_current_letter(): void {
-    let current_letter: [number, number] = [0, 0];
-
     for (var h: number = 0; h < info_tracker.letters.length; h++) {
         for (var w: number = 0; w < info_tracker.letters[h].length; w++) {
             if (info_tracker.letters[h][w].textContent == "") {
                 info_tracker.current_letter[0] = w;
                 info_tracker.current_letter[1] = h;
+                return;
             }
         }
     }
@@ -51,10 +50,21 @@ function delete_button(): void {
     info_tracker.letters[info_tracker.current_letter[1]][info_tracker.current_letter[0]].textContent = "";
 }
 
-function _evaluate_submit(json_data: number[] | null) {
+/**
+ * Undos the last word as long as it wasn't submitted.
+ */
+function undo_last_word(): void {
+    for (var i: number = 0; i < info_tracker.WORD_LENGTH; i++) {
+        info_tracker.letters[info_tracker.current_letter[1]][i].textContent = "";
+        info_tracker.current_letter = [0, info_tracker.current_letter[1]];
+        info_tracker.current_word = "";
+    }
+}
+
+function evaluate_submit(json_data: number[] | null) {
 
     if (json_data === null) {
-        // undo_last_word();
+        undo_last_word();
         return;
     }
 
@@ -71,7 +81,18 @@ function _evaluate_submit(json_data: number[] | null) {
     info_tracker.current_letter = [0, info_tracker.current_letter[1] + 1];
     info_tracker.current_try = info_tracker.current_try + 1;
 
-    // _victory(json_data);
+    for (var i: number = 0; i < json_data.length; i++) {
+        if (json_data[i] != 2) {
+            if (info_tracker.current_try == info_tracker.amount_tries) {
+                window.location.href = "/game/result/" + info_tracker.GAME_ID;
+            }
+
+            return;
+        }
+    }
+
+    window.location.href = "/game/result/" + info_tracker.GAME_ID;
+
 }
 
 function enter_button(): void {
@@ -85,7 +106,7 @@ function enter_button(): void {
         info_tracker.current_word,
         info_tracker.GAME_ID,
         enable_all,
-        _evaluate_submit
+        evaluate_submit
     )
 }
 
@@ -105,37 +126,8 @@ create_game_field(
 set_progress(
     info_tracker.GAME_ID,
     info_tracker.letters,
-    () => {
-        // Set the users current progress.
-        let pos = set_current_letter();
-    }
+    set_current_letter
 );
-
-
-
-// /**
-//  * Undos the last word as long as it wasn't submitted.
-//  */
-// function _undo_last_word(): void {
-//     for (var i: number = 0; i < word_length; i++) {
-//         letters[current_letter[1]][i].textContent = "";
-//         current_letter = [0, current_letter[1]];
-//         current_word = "";
-//     }
-// }
-
-// function _victory(json_data: number[]): void {
-//     for (var i: number = 0; i < json_data.length; i++) {
-//         if (json_data[i] != 2) {
-//             if (current_try == amount_tries) {
-//                 window.location.href = "/game/result/" + game_id;
-//             }
-
-//             return;
-//         }
-//     }
-//     window.location.href = "/game/result/" + game_id;
-// }
 
 // window.onkeydown = function(event): void {
 //     console.log(event.keyCode);
