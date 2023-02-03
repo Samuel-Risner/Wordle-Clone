@@ -1,4 +1,4 @@
-export { set_progress };
+export { set_progress, submit_word };
 import { colour_key, colour_letter } from "./colour.js";
 function set_progress(game_id, letters, also_call) {
     fetch("/json/get_progress/" + game_id).then((res) => {
@@ -9,7 +9,7 @@ function set_progress(game_id, letters, also_call) {
             console.error("Colud not get json data from: '/json/get_progress/" + game_id + "'.");
         });
     }).catch((_) => {
-        console.error("Fetch failed to frtch from: '/json/get_progress/" + game_id + "'.");
+        console.error("Failed to aquire json from: '/json/get_progress/" + game_id + "'.");
     });
 }
 function _set_progress(json_data, letters) {
@@ -25,4 +25,18 @@ function _set_progress(json_data, letters) {
             colour_letter(letter_element, num);
         }
     }
+}
+function submit_word(word, game_id, call_after, call_on_success) {
+    fetch("/json/add_word/" + game_id + "/" + word).then((res) => {
+        res.json().then((res) => {
+            call_on_success(res);
+            call_after();
+        }).catch((_) => {
+            console.error("Failed to aquire json from: '/json/get_progress/" + game_id + "/" + word + "'.");
+            call_after();
+        });
+    }).catch((_) => {
+        console.error("Failed to fetch from: '/json/get_progress/" + game_id + "/" + word + "'.");
+        call_after();
+    });
 }
