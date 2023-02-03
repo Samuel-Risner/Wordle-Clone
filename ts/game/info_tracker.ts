@@ -8,7 +8,7 @@ class InfoTracker {
 
     private current_try: number;
     public letters: HTMLDivElement[][];
-    private current_letter: [number, number];
+    public current_letter: [number, number];
     private current_word: string;
 
     public GAME: HTMLDivElement;

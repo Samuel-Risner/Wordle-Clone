@@ -1,6 +1,7 @@
 import { create_game_field } from "./game/create_game_field.js";
 import { create_keyboard } from "./game/create_keyboard.js";
-import { set_progress } from "./game/fetchers.js"
+import { set_progress } from "./game/fetchers.js";
+import { set_current_letter } from "./game/game_interaction.js";
 import { info_tracker } from "./game/info_tracker.js";
 
 create_keyboard(
@@ -19,59 +20,15 @@ create_game_field(
 set_progress(
     info_tracker.GAME_ID,
     info_tracker.letters,
-    () => {}
+    () => {
+        // Set the users current progress.
+        let pos = set_current_letter(info_tracker.letters);
+        info_tracker.current_letter[0] = pos[0];
+        info_tracker.current_letter[1] = pos[1];
+    }
 );
 
-// function init_game(): void {
-//     var game = document.getElementById("game");
 
-//     if (game === null) {
-//         console.error("Could not retreive html element with the id: 'game'.");
-//         return;
-//     }
-
-//     var table = document.createElement("table");
-//     game.appendChild(table);
-
-//     var cell_width = 90 / word_length;
-
-//     for (var h: number = 0; h < amount_tries; h++) {
-//         var tr: HTMLTableRowElement = document.createElement("tr");
-//         table.appendChild(tr);
-//         letters.push([]);
-
-//         for (var w: number = 0; w < word_length; w++) {
-//             var td: HTMLTableCellElement = document.createElement("td");
-//             tr.appendChild(td);
-//             var div: HTMLDivElement = document.createElement("div");
-//             td.appendChild(div)
-            
-//             div.textContent = "";
-//             div.style.width = String(cell_width) + "vw";
-//             div.style.fontSize = String(cell_width * 0.8) + "vw";
-//             div.className = "letter";
-
-//             letters[h].push(div);
-//         }
-//     }
-// }
-
-
-
-// /**
-//  * Sets the position were the user stopped playing the game.
-//  */
-// function _set_current_letter(): void {
-//     for (var h: number = 0; h < letters.length; h++) {
-//         for (var w: number = 0; w < letters[h].length; w++) {
-//             if (letters[h][w].textContent == "") {
-//                 current_letter = [w, h];
-//                 current_try = h;
-//                 return;
-//             }
-//         }
-//     }
-// }
 
 // /**
 //  * Undos the last word as long as it wasn't submitted.
