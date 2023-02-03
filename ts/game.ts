@@ -6,18 +6,17 @@ import { info_tracker } from "./game/info_tracker.js";
 /**
  * Returns the position were the user stopped playing the game.
  */
-function set_current_letter(letters: HTMLDivElement[][]): [number, number] {
+function set_current_letter(): void {
     let current_letter: [number, number] = [0, 0];
 
-    for (var h: number = 0; h < letters.length; h++) {
-        for (var w: number = 0; w < letters[h].length; w++) {
-            if (letters[h][w].textContent == "") {
-                return current_letter = [w, h];
+    for (var h: number = 0; h < info_tracker.letters.length; h++) {
+        for (var w: number = 0; w < info_tracker.letters[h].length; w++) {
+            if (info_tracker.letters[h][w].textContent == "") {
+                info_tracker.current_letter[0] = w;
+                info_tracker.current_letter[1] = h;
             }
         }
     }
-
-    return current_letter;
 }
 
 create_keyboard(
@@ -38,9 +37,7 @@ set_progress(
     info_tracker.letters,
     () => {
         // Set the users current progress.
-        let pos = set_current_letter(info_tracker.letters);
-        info_tracker.current_letter[0] = pos[0];
-        info_tracker.current_letter[1] = pos[1];
+        let pos = set_current_letter();
     }
 );
 
