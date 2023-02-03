@@ -1,8 +1,24 @@
 import { create_game_field } from "./game/create_game_field.js";
 import { create_keyboard } from "./game/create_keyboard.js";
 import { set_progress } from "./game/fetchers.js";
-import { set_current_letter } from "./game/game_interaction.js";
 import { info_tracker } from "./game/info_tracker.js";
+
+/**
+ * Returns the position were the user stopped playing the game.
+ */
+function set_current_letter(letters: HTMLDivElement[][]): [number, number] {
+    let current_letter: [number, number] = [0, 0];
+
+    for (var h: number = 0; h < letters.length; h++) {
+        for (var w: number = 0; w < letters[h].length; w++) {
+            if (letters[h][w].textContent == "") {
+                return current_letter = [w, h];
+            }
+        }
+    }
+
+    return current_letter;
+}
 
 create_keyboard(
     (_:string) => {},
