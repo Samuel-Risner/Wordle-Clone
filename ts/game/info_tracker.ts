@@ -6,10 +6,10 @@ class InfoTracker {
     public amount_tries: number;
     public WORD_LENGTH: number;
 
-    private current_try: number;
+    public current_try: number;
     public letters: HTMLDivElement[][];
     public current_letter: [number, number];
-    private current_word: string;
+    public current_word: string;
 
     public GAME: HTMLDivElement;
 

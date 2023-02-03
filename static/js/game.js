@@ -1,14 +1,41 @@
 import { create_game_field } from "./game/create_game_field.js";
 import { create_keyboard } from "./game/create_keyboard.js";
 import { set_progress } from "./game/fetchers.js";
-import { set_current_letter } from "./game/game_interaction.js";
 import { info_tracker } from "./game/info_tracker.js";
-create_keyboard((_) => { }, () => { }, () => { });
+/**
+ * Returns the position were the user stopped playing the game.
+ */
+function set_current_letter() {
+    let current_letter = [0, 0];
+    for (var h = 0; h < info_tracker.letters.length; h++) {
+        for (var w = 0; w < info_tracker.letters[h].length; w++) {
+            if (info_tracker.letters[h][w].textContent == "") {
+                info_tracker.current_letter[0] = w;
+                info_tracker.current_letter[1] = h;
+            }
+        }
+    }
+}
+/**
+ * Enters an letter into the ui.
+ * @param letter The letter that is to be entered into the ui.
+ */
+function add_letter(letter) {
+    if (info_tracker.current_letter[0] >= info_tracker.WORD_LENGTH) {
+        return;
+    }
+    if (info_tracker.current_try >= info_tracker.amount_tries) {
+        return;
+    }
+    info_tracker.letters[info_tracker.current_letter[1]][info_tracker.current_letter[0]].textContent = letter;
+    info_tracker.current_letter[0] = info_tracker.current_letter[0] + 1;
+    info_tracker.current_word = info_tracker.current_word + letter;
+}
+create_keyboard(add_letter, () => { }, () => { });
 create_game_field(info_tracker.letters, info_tracker.WORD_LENGTH, info_tracker.amount_tries, info_tracker.GAME);
 set_progress(info_tracker.GAME_ID, info_tracker.letters, () => {
-    let pos = set_current_letter(info_tracker.letters);
-    info_tracker.current_letter[0] = pos[0];
-    info_tracker.current_letter[1] = pos[1];
+    // Set the users current progress.
+    let pos = set_current_letter();
 });
 // /**
 //  * Undos the last word as long as it wasn't submitted.
@@ -28,21 +55,6 @@ set_progress(info_tracker.GAME_ID, info_tracker.letters, () => {
 //  *      > 1: letter occurs in word but isn't at the right position
 //  *      > 2: letter occurs in the word and is at the right position.
 //  */
-// /**
-//  * Enters an letter into the ui.
-//  * @param letter The letter that is to be entered into the ui.
-//  */
-// function _add_letter(letter: string): void {
-//     if (current_letter[0] >= word_length) {
-//         return;
-//     }
-//     if (current_try >= amount_tries) {
-//         return;
-//     }
-//     letters[current_letter[1]][current_letter[0]].textContent = letter;
-//     current_letter[0] = current_letter[0] + 1;
-//     current_word = current_word + letter;
-// }
 // /**
 //  * Removes the last letter that was entered into the ui, aslong as the entered word wasn't submited.
 //  */

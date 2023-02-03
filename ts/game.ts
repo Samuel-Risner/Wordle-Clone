@@ -19,8 +19,26 @@ function set_current_letter(): void {
     }
 }
 
+/**
+ * Enters an letter into the ui.
+ * @param letter The letter that is to be entered into the ui.
+ */
+function add_letter(letter: string): void {
+    if (info_tracker.current_letter[0] >= info_tracker.WORD_LENGTH) {
+        return;
+    }
+
+    if (info_tracker.current_try >= info_tracker.amount_tries) {
+        return;
+    }
+
+    info_tracker.letters[info_tracker.current_letter[1]][info_tracker.current_letter[0]].textContent = letter;
+    info_tracker.current_letter[0] = info_tracker.current_letter[0] + 1;
+    info_tracker.current_word = info_tracker.current_word + letter;
+}
+
 create_keyboard(
-    (_:string) => {},
+    add_letter,
     () => {},
     () => {}
 )
@@ -62,27 +80,6 @@ set_progress(
 //  *      > 1: letter occurs in word but isn't at the right position
 //  *      > 2: letter occurs in the word and is at the right position.
 //  */
-
-
-
-
-// /**
-//  * Enters an letter into the ui.
-//  * @param letter The letter that is to be entered into the ui.
-//  */
-// function _add_letter(letter: string): void {
-//     if (current_letter[0] >= word_length) {
-//         return;
-//     }
-
-//     if (current_try >= amount_tries) {
-//         return;
-//     }
-
-//     letters[current_letter[1]][current_letter[0]].textContent = letter;
-//     current_letter[0] = current_letter[0] + 1;
-//     current_word = current_word + letter;
-// }
 
 // /**
 //  * Removes the last letter that was entered into the ui, aslong as the entered word wasn't submited.
