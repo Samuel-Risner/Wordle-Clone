@@ -1,11 +1,62 @@
-export { create_keyboard };
+export { create_keyboard, disable_enter_button, enable_enter_button, disable_delete_button, enable_delete_button, disable_all, enable_all };
+/**
+ * Conatains all the keyboard buttons. The first two buttons are the enter and delete buttons.
+ */
+let KEY_ELEMETS = [];
+/**
+ * Disables the enter button.
+ */
+function disable_enter_button() {
+    KEY_ELEMETS[0].disabled = true;
+}
+/**
+ * Enables the enter button.
+ */
+function enable_enter_button() {
+    KEY_ELEMETS[0].disabled = false;
+}
+/**
+ * Disables the delete button.
+ */
+function disable_delete_button() {
+    KEY_ELEMETS[1].disabled = true;
+}
+/**
+ * Enables the delete button.
+ */
+function enable_delete_button() {
+    KEY_ELEMETS[1].disabled = false;
+}
+/**
+ * Disables all keyboard buttons.
+ */
+function disable_all() {
+    for (let btn of KEY_ELEMETS) {
+        btn.disabled = true;
+    }
+}
+/**
+ * Enables all keyboard buttons.
+ */
+function enable_all() {
+    for (let btn of KEY_ELEMETS) {
+        btn.disabled = false;
+    }
+}
+/**
+ * Creates the keyboard and adds it to the html element with the id "keyboard". The styles for the keys are set here aswell.
+ * @param on_letter_click What happens when a button with a letter is clicked. The letter is passed to the function.
+ * @param on_enter The function that is called when the enter button is pressed.
+ * @param on_delete The function that is called when the delete button is pressed.
+ */
 function create_keyboard(on_letter_click, on_enter, on_delete) {
     var keyboard_object = document.getElementById("keyboard");
     if (keyboard_object === null) {
         console.error("Could not retreive html element with id: 'keyboard'.");
         return;
     }
-    const HEIGHT = _create_row("QWERTZUIOP", keyboard_object, on_letter_click);
+    // const HEIGHT = 
+    _create_row("QWERTZUIOP", keyboard_object, on_letter_click);
     // space left
     let space_left = document.createElement("div");
     space_left.className = "w-[5vw]";
@@ -17,6 +68,7 @@ function create_keyboard(on_letter_click, on_enter, on_delete) {
     let enter_cell = document.createElement("td");
     let button = document.createElement("button");
     enter_cell.appendChild(button);
+    KEY_ELEMETS.push(button);
     button.onclick = on_enter;
     button.className = "h-[10vh] rounded-lg border-2 p-1";
     let img = document.createElement("img");
@@ -26,6 +78,7 @@ function create_keyboard(on_letter_click, on_enter, on_delete) {
     let delete_cell = document.createElement("td");
     button = document.createElement("button");
     delete_cell.appendChild(button);
+    KEY_ELEMETS.push(button);
     button.onclick = on_delete;
     button.className = "h-[10vh] rounded-lg border-2 p-1";
     img = document.createElement("img");
@@ -33,6 +86,14 @@ function create_keyboard(on_letter_click, on_enter, on_delete) {
     img.src = "/static/images/delete_key_v2.svg";
     _create_row("YXCVBNM", keyboard_object, on_letter_click, enter_cell, delete_cell);
 }
+/**
+ * Creates a new table which conatins a row of keyboard buttons. The styles for the keys are also set here.
+ * @param letters The letters that are to be added to the row.
+ * @param append_to The html element to which the created table is going to be appended to.
+ * @param on_letter_click The function which is called when a letter is pressed. The pressed letter is passed to the function.
+ * @param prepend A html element, for example the enter button or a spacer, which is added to the beginning of the keyboard row.
+ * @param append The same as "prepend", only that the element is added to the end of the row.
+ */
 function _create_row(letters, append_to, on_letter_click, prepend = null, append = null) {
     let table = document.createElement("table");
     append_to.appendChild(table);
@@ -49,6 +110,7 @@ function _create_row(letters, append_to, on_letter_click, prepend = null, append
         cell.className = "w-[10vw]";
         var button = document.createElement("button");
         cell.appendChild(button);
+        KEY_ELEMETS.push(button);
         button.textContent = character;
         button.onclick = () => {
             on_letter_click(character);

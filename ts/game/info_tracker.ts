@@ -2,7 +2,7 @@ export { info_tracker };
 
 class InfoTracker {
 
-    private GAME_ID: string;
+    public GAME_ID: string;
     public amount_tries: number;
     public WORD_LENGTH: number;
 
@@ -28,4 +28,7 @@ class InfoTracker {
 
 }
 
+/**
+ * An object storing general iformation needed for the game. 
+ */
 const info_tracker = new InfoTracker();

@@ -12,4 +12,7 @@ class InfoTracker {
         this.GAME = document.getElementById("game");
     }
 }
+/**
+ * An object storing general iformation needed for the game.
+ */
 const info_tracker = new InfoTracker();

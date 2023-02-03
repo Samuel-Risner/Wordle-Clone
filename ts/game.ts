@@ -1,7 +1,7 @@
 import { create_game_field } from "./game/create_game_field.js";
 import { create_keyboard } from "./game/create_keyboard.js";
+import { set_progress } from "./game/fetchers.js"
 import { info_tracker } from "./game/info_tracker.js";
-// import { test } from "./game/test.js";
 
 create_keyboard(
     (_:string) => {},
@@ -16,12 +16,11 @@ create_game_field(
     info_tracker.GAME
 );
 
-// create_keyboard(
-//     (_: string) => {},
-//     () => {},
-//     () => {},
-    
-// );
+set_progress(
+    info_tracker.GAME_ID,
+    info_tracker.letters,
+    () => {}
+);
 
 // function init_game(): void {
 //     var game = document.getElementById("game");
@@ -57,17 +56,7 @@ create_game_field(
 //     }
 // }
 
-// /**
-//  * This function gets the current game state from the server. This is needed when the user leaves the page or
-//  * accidentaly refreshes the game.
-//  * @returns A promise for json data.
-//  */
-// async function _get_progress_async() {
-//     var response = await fetch("/json/get_progress/" + game_id);
-//     var json = await response.json();
 
-//     return json;
-// }
 
 // /**
 //  * Sets the position were the user stopped playing the game.
@@ -103,56 +92,9 @@ create_game_field(
 //  *      > 1: letter occurs in word but isn't at the right position
 //  *      > 2: letter occurs in the word and is at the right position.
 //  */
-// function _set_progress(json_data: [string, number[]][]): void {
-//     for (var line: number = 0; line < json_data.length; line++) {
-//         var word = json_data[line][0];
-//         var match = json_data[line][1];
 
-//         for (var letter: number = 0; letter < word.length; letter++) {
-//             var character = word.charAt(letter);
-//             var num = match[letter];
-//             var letter_object = letters[line][letter];
 
-//             letter_object.textContent = character;
 
-//             var key = document.getElementById(character);
-
-//             if (key === null) {
-//                 console.error("Could not retreive the html element with the id: '" + character + "'.");
-//                 return;
-//             }
-
-//             if (num == 0) {
-//                 letter_object.className = "letter does_not_occur_in_game";
-//                 if (key.className == "keyboard_contents button") {
-//                     key.className = "keyboard_contents button does_not_occur_in_game";
-//                 }
-//             } else if (num == 1) {
-//                 letter_object.className = "letter occurs_in_word";
-//                 if (key.className != "keyboard_contents button correct_position") {
-//                     key.className = "keyboard_contents button occurs_in_word";
-//                 }
-//             } else if (num == 2) {
-//                 letter_object.className = "letter correct_position";
-//                 key.className = "keyboard_contents button correct_position";
-//             }
-//         }
-//     }
-
-//     _set_current_letter();
-// }
-
-// /**
-//  * This function handels the promise from the async function `_get_progress_async` and passes it on to the function
-//  * `_set_progress`. This function is also called from a script tag in the html file. 
-//  */
-// function set_progress(): void{
-//     _get_progress_async().then(
-//         (_res) => {console.log("SUPER!"); console.log(_res); _set_progress(_res)}
-//     ).catch(
-//         (_res) => {console.log("UPSI!"); console.log(_res);}
-//     );
-// }
 
 // /**
 //  * Enters an letter into the ui.
