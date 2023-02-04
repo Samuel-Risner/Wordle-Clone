@@ -50,6 +50,21 @@ function delete_button(): void {
     info_tracker.letters[info_tracker.current_letter[1]][info_tracker.current_letter[0]].textContent = "";
 }
 
+function enter_button(): void {
+    if (info_tracker.current_word.length != info_tracker.WORD_LENGTH) {
+        return;
+    }
+
+    disable_all();
+
+    submit_word(
+        info_tracker.current_word,
+        info_tracker.GAME_ID,
+        enable_all,
+        evaluate_submit
+    )
+}
+
 /**
  * Undos the last word as long as it wasn't submitted.
  */
@@ -61,8 +76,8 @@ function undo_last_word(): void {
     }
 }
 
-function evaluate_submit(json_data: number[] | null) {
-
+function evaluate_submit(json_data: number[] | null): void {
+    // Word does not exist.
     if (json_data === null) {
         undo_last_word();
         return;
@@ -81,6 +96,7 @@ function evaluate_submit(json_data: number[] | null) {
     info_tracker.current_letter = [0, info_tracker.current_letter[1] + 1];
     info_tracker.current_try = info_tracker.current_try + 1;
 
+    // If the word was correct.
     for (var i: number = 0; i < json_data.length; i++) {
         if (json_data[i] != 2) {
             if (info_tracker.current_try == info_tracker.amount_tries) {
@@ -95,19 +111,28 @@ function evaluate_submit(json_data: number[] | null) {
 
 }
 
-function enter_button(): void {
-    if (info_tracker.current_word.length != info_tracker.WORD_LENGTH) {
-        return;
+window.onkeydown = function(event: KeyboardEvent): void {
+    let key: string = event.key;
+
+    // enter
+    if (key == "Enter") {
+        enter_button();
+
+    // backspace 
+    } else if (key == "Backspace") {
+        delete_button();
+
+    // letter
+    } else {
+        if (key.length != 1) {
+            return;
+        }
+
+        let valid_cahars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        if (valid_cahars.includes(key)) {
+            add_letter(key.toUpperCase());
+        }
     }
-
-    disable_all();
-
-    submit_word(
-        info_tracker.current_word,
-        info_tracker.GAME_ID,
-        enable_all,
-        evaluate_submit
-    )
 }
 
 create_keyboard(
@@ -128,28 +153,3 @@ set_progress(
     info_tracker.letters,
     set_current_letter
 );
-
-// window.onkeydown = function(event): void {
-//     console.log(event.keyCode);
-//     let code: number = event.keyCode;
-
-//     // enter
-//     if (code === 13) {
-//         _enter();
-
-//     // backspace 
-//     } else if (code === 8) {
-//         _remove_letter();
-
-//     // letter
-//     } else {
-//         if (code < 65) {
-//             return;
-//         }
-//         if (code > 90) {
-//             return;
-//         }
-//         let key: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(code - 65);
-//         _add_letter(key);
-//     }
-// }
