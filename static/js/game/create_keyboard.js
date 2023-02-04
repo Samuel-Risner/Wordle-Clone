@@ -87,7 +87,7 @@ function create_keyboard(on_letter_click, on_enter, on_delete) {
     button_delete.appendChild(img_delete);
     img_delete.src = "/static/images/delete_key_v2.svg";
     img_delete.className = img_enter.className;
-    _create_row("YXCVBNM", keyboard_object, on_letter_click, enter_cell, delete_cell);
+    _create_row("YXCVBNM", keyboard_object, on_letter_click, delete_cell, enter_cell);
 }
 /**
  * Creates a new table which conatins a row of keyboard buttons. The styles for the keys are also set here.

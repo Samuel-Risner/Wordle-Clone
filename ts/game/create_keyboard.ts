@@ -113,7 +113,7 @@ function create_keyboard(
     img_delete.src = "/static/images/delete_key_v2.svg";
     img_delete.className = img_enter.className;
 
-    _create_row("YXCVBNM", keyboard_object, on_letter_click, enter_cell, delete_cell);
+    _create_row("YXCVBNM", keyboard_object, on_letter_click, delete_cell, enter_cell);
 }
 
 /**
