@@ -15,7 +15,7 @@ function create_game_field(
     ): void {
     
     let cell_width: number = 90 / word_length;
-    let font_size: number = cell_width * 0.65;
+    let font_size: number = cell_width * 0.55;
     
     let table: HTMLTableElement = document.createElement("table");
     append_to.appendChild(table);
@@ -37,7 +37,9 @@ function create_game_field(
             row_list.push(div);
 
             div.textContent = "";
-            div.className = "aspect-square text-[" + font_size + "vw] border-4 border-grey-500 w-[" + cell_width + "vw]";
+            div.className = "aspect-square border-4 border-grey-500";
+            div.style.width = cell_width + "vw";
+            div.style.fontSize = font_size + "vw";
         }
     }
 }
