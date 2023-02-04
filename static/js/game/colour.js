@@ -6,10 +6,10 @@ export { colour_key, colour_letter };
  */
 function _colour_element(element, num) {
     if (num == 0) {
-        element.style.backgroundColor = "red";
+        element.style.backgroundColor = "rgb(192, 192, 192)";
     }
     else if (num == 1) {
-        element.style.backgroundColor = "yellow";
+        element.style.backgroundColor = "rgb(243, 221, 18)";
     }
     else if (num == 2) {
         element.style.backgroundColor = "green";
