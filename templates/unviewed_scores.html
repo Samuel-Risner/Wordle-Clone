@@ -5,10 +5,16 @@
 
 {% block content %}
     {% if game_ids %}
-        {% for game_id in game_ids %} 
-            <a href="/game/result/{{ game_id }}">
-                view
-            </a>
-        {% endfor %}
+        <div class="m-auto text-center mt-10 mb-10 text-2xl">
+            {% for game_id in game_ids %} 
+                <a href="/game/result/{{ game_id }}">
+                    view
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h1 class="m-auto text-center mt-10 mb-10 text-2xl">
+            No unviewed scores!
+        </h1>
     {% endif %}
 {% endblock %}

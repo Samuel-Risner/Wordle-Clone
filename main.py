@@ -96,7 +96,7 @@ def game_result(game_id: str):
         return render_error(404)
     
     word_info = user_handler.get_word_finished_info(current_user.id, game_id) # type: ignore
-    # user_handler.remove_word(current_user.id, game_id) # type: ignore
+    user_handler.remove_word(current_user.id, game_id) # type: ignore
 
     if word_info is None:
         return render_error(400)
