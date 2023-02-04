@@ -1,0 +1,52 @@
+.navbar {
+    width: 100vw;
+    height: fit-content;
+
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    z-index: 187;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: rgb(230, 222, 222);
+    font-size: x-large;
+}
+
+/* has desktop */
+.navbar.bg_clolour_show {
+    background-color: black;
+
+    width: 75vw;
+    height: 100vh;
+}
+
+.navbar.bg_clolour_hide {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.hamburger button {
+    background-color: rgba(0, 0, 0, 0);
+
+    padding: 0px;
+    margin: 10px;
+    border: 0px;
+}
+
+/* has desktop */
+.hamburger img {
+    width: 12vw;
+}
+
+#dropdown {
+    padding-left: 15px;
+}
+
+/* for desktop */
+@media only screen and (min-width: 768px) {
+    .navbar.bg_clolour_show {width: 25vw;}
+    .hamburger img {width: 4vw;}
+    .navbar a {font-size: xx-large;}
+}

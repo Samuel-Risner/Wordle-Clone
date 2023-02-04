@@ -5,22 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Wordle-Clone{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- <link rel="stylesheet" href="/static/dist/main.css"> -->
 </head>
-<body>
-    <link rel="stylesheet" href="/static/css/navbar.css">
-    <link rel="stylesheet" href="/static/css/standard.css">
-    
+<body>    
     <script type="text/javascript" src="/static/js/navbar.js"></script>
     <script type="text/javascript" src="/static/js/remove_element.js"></script>
 
-    <div class="navbar">
-        <div class="navbar bg_clolour_hide" id="navbar_bg_colour">
-            <div class="hamburger">
-                <button onclick="toggle_dropdown()">
-                    <img src="/static/images/hamburger_v3.svg">
-                </button>
-            </div>
-            <div id="dropdown" hidden>
+    <nav class="fixed top-0 left-0 bg-transparent z-10">
+        <div id="navbar_hidden">
+            <button onclick="toggle_dropdown()" class="bg-transparent m-2 w-16">
+                <img src="/static/images/hamburger_v3.svg">
+            </button>
+        </div>
+        <div id="navbar_show" hidden class="bg-black h-screen text-white text-3xl">
+            <button onclick="toggle_dropdown()" class="bg-transparent m-2 w-16">
+                <img src="/static/images/hamburger_v2.svg">
+            </button>
+
+            <div class="m-4 ml-2 mt-2">
                 {% if user %}
                     {% if not user.is_authenticated %}
                         <a href="/login">
@@ -39,12 +43,12 @@
                 <br>
                 {% if user %}
                     {% if user.is_authenticated %}
-                        <a href="/active_games">
-                            active games
-                        </a>
-                        <br>
                         <a href="/game/choose_language">
                             custom game
+                        </a>
+                        <br>
+                        <a href="/active_games">
+                            active games
                         </a>
                         <br>
                         <a href="/stats">
@@ -63,36 +67,29 @@
                 {% endif %}
             </div>
         </div>
-    </div>
+    </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <link rel="stylesheet" href="/static/css/flashed_messages.css">
-
-            {% for category, message in messages %}
-                {% if category == "error" %}
-                    <div id="{{ loop.index }}" class="flashed error">
+            <div class="float-right text-2xl pt-16">
+                {% for category, message in messages %}
+                    <div id="{{ loop.index }}" class="pr-5 pl-5 pt-2 pb-2 m-1 rounded-full text-center break-all
+                        {% if category == 'error' %}
+                            bg-red-500
+                        {% elif category == 'success' %}
+                            bg-green-500
+                        {% else %}
+                            bg-blue-500
+                        {% endif %}
+                        ">
                         {{ message }}
                         <button onclick="remove_element('{{ loop.index }}')">
                             <span>&times;</span>
                         </button>
                     </div>
-                {% elif category == "success" %}
-                    <div id="{{ loop.index }}" class="flashed success">
-                        {{ message }}
-                        <button onclick="remove_element('{{ loop.index }}')">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                {% else %}
-                    <div id="{{ loop.index }}" class="flashed info">
-                        {{ message }}
-                        <button onclick="remove_element('{{ loop.index }}')">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
+                <br>
+            </div>
         {% endif %}
     {% endwith %}
 

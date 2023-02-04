@@ -1,0 +1,40 @@
+.user_input {
+    text-align: center;
+
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.user_input input {
+    width: 90vw;
+    font-size: larger;
+    margin: 5px;
+}
+
+.user_input label {
+    font-size: medium;
+}
+
+#to_submit {
+    text-align: center;
+    width: 100vw;
+}
+
+#to_submit button {
+    font-size: x-large;
+    border: 10px;
+    border-radius: 0px;
+    color: white;
+    background-color: #3e65ca;
+}
+
+/* for desktop */
+@media only screen and (min-width: 768px) {
+    .user_input label {font-size: xx-large;}
+    #to_submit button {font-size: xx-large;}
+    .user_input input { font-size: xx-large;}
+}
