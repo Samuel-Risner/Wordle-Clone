@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Disapprove Word{% endblock %}
+{% block language %}en{% endblock %}
+
+{% block content %}
+    <div class="fixed top-1/2 left-1/2 m-0 text-center -translate-x-1/2 -translate-y-1/2 text-2xl bg-blue-50 p-5
+    rounded-md -z-10 w-fit">
+        <button class="mb-10 bg-gray-300 rounded-full pl-5 pr-5" onclick="this.textContent = '{{ word }}';">
+            Click to see word
+        </button>
+        <form method="post">
+            <button type="submit" class="text-white bg-sky-500 hover:bg-sky-700 rounded-full pl-6 pr-6 mt-2 pt-1 pb-1">
+                Submit
+            </button>
+        </form>
+    </div>
+{% endblock %}

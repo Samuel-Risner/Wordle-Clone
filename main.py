@@ -1,4 +1,4 @@
-import json, logging
+import json, logging, base64, binascii
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -77,15 +77,30 @@ def add_word(game_id: str, word: str):
         
     return settings.words.DEFAULT_JSON_RESPONSE
 
-@app.route("/disapprove_word/<word>")
+@app.route("/disapprove_word/<word>", methods=["GET", "POST"])
 @login_required # type: ignore 
 def disapprove_word(word: str):
-    if not check_word_characters(word):
-        return ""
+    b64_decoded: None | str = None
 
-    # add_disapproved_word(word, current_user.username) # type: ignore
+    try:
+        b64_decoded = base64.b64decode(word).decode("UTF-8")
+    except binascii.Error:
+        pass
+    except UnicodeDecodeError:
+        pass
 
-    return ""
+    if b64_decoded is None:
+        return render_error(400)
+
+    if request.method == "POST":
+        if user_handler.disapprove_word(current_user.id, b64_decoded): # type: ignore
+            flash("Word was successfully disapproved!", category="success")
+        else:
+            flash("Word was could not be disapproved. You reported to many.", category="error")
+        
+        return redirect(url_for("index"))
+
+    return render_template("disapprove_word.html", word=b64_decoded, user=current_user)
 
 @app.route("/game/result/<game_id>")
 @login_required # type: ignore 
