@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Game settings{% endblock %}
+{% block title %}Game Settings{% endblock %}
 {% block language %}en{% endblock %}
 
 {% block content %}
@@ -44,7 +44,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="range" id="amount_tries" name="amount_tries" min="{{ min_tries}}"
+                            <input type="range" id="amount_tries" name="amount_tries" min="{{ min_tries }}"
                             max="{{ max_tries }}" oninput="display_input_value('amount_tries', 'amount_tries_output')"
                             step="1">
                         </td>
