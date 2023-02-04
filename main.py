@@ -96,7 +96,7 @@ def disapprove_word(word: str):
         if user_handler.disapprove_word(current_user.id, b64_decoded): # type: ignore
             flash("Word was successfully disapproved!", category="success")
         else:
-            flash("Word was could not be disapproved. You reported to many.", category="error")
+            flash("Word could not be disapproved. Too many reported.", category="error")
         
         return redirect(url_for("index"))
 
