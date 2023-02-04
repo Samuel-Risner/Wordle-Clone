@@ -76,39 +76,42 @@ function create_keyboard(
 
     // space left
     let space_left: HTMLDivElement = document.createElement("div");
-    space_left.className = "w-[5vw]";
+    space_left.className = "w-[5%]";
 
     // space right
     let space_right: HTMLDivElement = document.createElement("div");
-    space_right.className = "w-[5vw]";
+    space_right.className = space_left.className;
 
     _create_row("ASDFGHJKL", keyboard_object, on_letter_click, space_left, space_right);
 
     // Enter button
     let enter_cell: HTMLTableCellElement = document.createElement("td");
+    enter_cell.className = "w-[15%]";
 
-    let button: HTMLButtonElement = document.createElement("button");
-    enter_cell.appendChild(button);
-    KEY_ELEMETS.push(button);
-    button.onclick = on_enter;
-    button.className = "h-[10vh] rounded-lg border-2 p-1";
+    let button_enter: HTMLButtonElement = document.createElement("button");
+    enter_cell.appendChild(button_enter);
+    KEY_ELEMETS.push(button_enter);
+    button_enter.onclick = on_enter;
+    button_enter.className = "w-11/12 h-[95%] rounded-lg border-2 p-1";
 
-    let img: HTMLImageElement = document.createElement("img");
-    button.appendChild(img);
-    img.src = "/static/images/enter_key.svg";
+    let img_enter: HTMLImageElement = document.createElement("img");
+    button_enter.appendChild(img_enter);
+    img_enter.src = "/static/images/enter_key.svg";
+    img_enter.className = "sm:w-[68%] m-auto";
 
     // delete button
     let delete_cell: HTMLTableCellElement = document.createElement("td");
 
-    button = document.createElement("button");
-    delete_cell.appendChild(button);
-    KEY_ELEMETS.push(button);
-    button.onclick = on_delete;
-    button.className = "h-[10vh] rounded-lg border-2 p-1";
+    let button_delete = document.createElement("button");
+    delete_cell.appendChild(button_delete);
+    KEY_ELEMETS.push(button_delete);
+    button_delete.onclick = on_delete;
+    button_delete.className = button_enter.className;
 
-    img = document.createElement("img");
-    button.appendChild(img);
-    img.src = "/static/images/delete_key_v2.svg";
+    let img_delete = document.createElement("img");
+    button_delete.appendChild(img_delete);
+    img_delete.src = "/static/images/delete_key_v2.svg";
+    img_delete.className = img_enter.className;
 
     _create_row("YXCVBNM", keyboard_object, on_letter_click, enter_cell, delete_cell);
 }
@@ -131,11 +134,11 @@ function _create_row(
     
     let table: HTMLTableElement = document.createElement("table");
     append_to.appendChild(table);
-    table.className = "w-full";
+    table.className = "w-full h-1/3 text-center";
 
     let row: HTMLTableRowElement = document.createElement("tr");
     table.appendChild(row);
-    row.className =  "w-full h-[12vh] text-center";
+    row.className =  "w-full h-full";
 
     if (prepend !== null) {
         row.appendChild(prepend);
@@ -144,7 +147,7 @@ function _create_row(
     for (let character of letters) {
         var cell: HTMLTableCellElement = document.createElement("td");
         row.appendChild(cell);
-        cell.className = "w-[10vw]";
+        cell.className = "w-[10%]";
 
         var button: HTMLButtonElement = document.createElement("button");
         cell.appendChild(button);
@@ -155,7 +158,7 @@ function _create_row(
             on_letter_click(character);
         }
         button.id = character;
-        button.className = "text-[4vh] w-11/12 h-[10vh] rounded-lg border-2";
+        button.className = "w-11/12 h-[95%] rounded-lg border-2";
     }
 
     if (append !== null) {
