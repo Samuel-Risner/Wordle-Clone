@@ -26,17 +26,17 @@ work in progress
 
  ## Server key
 
-  Create the file *secret.json* in the current directory.
+  Open the file *secret.json* in the current directory.
 
-  Write the following code to the file:
+  You should see the following:
 
   ```json
   {
-      "app_secret_key": "Here goes you recret key!"
+      "app_secret_key": "Here goes you srecret key!"
   }
   ```
 
-  Replace *Here goes you recret key!* with something more secure.
+  Replace *Here goes you srecret key!* with something more secure.
 
 # Adding more words and languages
 
