@@ -18,6 +18,7 @@ from core.error_pages import render_error, init_error_pages
 from core.hash_functions import check_if_password_matches, generate_password_hash
 from core.secret_functions import get_app_secret_key
 from core.user_handler import UserHandler
+from core.load_home_contents import load_home_contents
 from settings.db import DB
 import settings
 
@@ -37,6 +38,8 @@ login_manager.init_app(app) # type: ignore
 init_error_pages(app)
 
 logger = logging.getLogger("main")
+
+HOME_CONTENTS = load_home_contents()
 
 @login_manager.user_loader # type: ignore
 def load_user(user_id): # type: ignore 
@@ -159,19 +162,13 @@ def select_game_size(language: str):
     """Returns a rendered templatefor game setup when `GET`is used, when `POST` is uded a new game is created and the
     user is redirected and an entry for the game is added to the database linked to the user."""
 
-    if not check_language(language):
-        return render_error(400)
-
-    if language not in user_handler.get_supported_languages():
-        return render_error(400)
-    
-    if request.method == "POST":
-        word_length = request.form.get("word_length")
-        amount_tries = request.form.get("amount_tries")
+    def check(ze_dict: dict):
+        word_length = ze_dict.get("word_length")
+        amount_tries = ze_dict.get("amount_tries")
 
         if (word_length is None) or (amount_tries is None):
             return render_error(400)
-        
+
         try:
             word_length = int(word_length)
             amount_tries = int(amount_tries)
@@ -211,8 +208,20 @@ def select_game_size(language: str):
             )
 
             return redirect(url_for("game", game_id=game_id))
-
+        
         return render_error(400)
+
+    if not check_language(language):
+        return render_error(400)
+
+    if language not in user_handler.get_supported_languages():
+        return render_error(400)
+    
+    if request.args != {}:
+        return check(request.args)
+    
+    if request.method == "POST":
+        return check(request.form)
 
     return render_template(
         "select_game_stuff.html",
@@ -278,7 +287,7 @@ def stats():
 def index():
     """The home page."""
 
-    return render_template("index.html", user=current_user)
+    return render_template("index.html", user=current_user, options=HOME_CONTENTS)
 
 @app.route("/home")
 def home():

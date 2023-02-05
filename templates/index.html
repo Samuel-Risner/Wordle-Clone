@@ -4,5 +4,30 @@
 {% block language %}en{% endblock %}
 
 {% block content %}
-
+    <div class="m-auto text-center">
+        {% for language, word_length, amount_tries in options %}
+            <a href="/game/setup/{{ language }}?word_length={{ word_length }}&amount_tries={{ amount_tries }}">
+                <button class="aspect-square w-4/5 2xl:w-1/5 bg-gray-200 m-6 text-center border-8 border-gray-300">
+                    <div class="h-1/10">
+                        Word Length
+                    </div>
+                    <div class="h-4/10 text-9xl">
+                        {{ word_length }}
+                    </div>
+                    <div class="h-1/10">
+                        Language
+                    </div>
+                    <div class="h-1/10 text-3xl">
+                        {{ language }}
+                    </div class="h-1/10">
+                    <div>
+                        Amount Tries
+                    </div class="h-1/10">
+                    <div class="h-1/10 text-3xl">
+                        {{ amount_tries }}
+                    </div>
+                </button>
+            </a>
+        {% endfor %}
+    </div>
 {% endblock %}
