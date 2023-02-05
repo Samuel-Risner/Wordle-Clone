@@ -5,14 +5,26 @@ export { colour_key, colour_letter };
  * @param num The number for the colour.
  */
 function _colour_element(element, num) {
+    const GREY = "rgb(192, 192, 192)";
+    const ORANGE = "rgb(243, 221, 18)";
+    const GREEN = "green";
     if (num == 0) {
-        element.style.backgroundColor = "rgb(192, 192, 192)";
+        if (element.style.backgroundColor == ORANGE) {
+            return;
+        }
+        if (element.style.backgroundColor == GREEN) {
+            return;
+        }
+        element.style.backgroundColor = GREY;
     }
     else if (num == 1) {
-        element.style.backgroundColor = "rgb(243, 221, 18)";
+        if (element.style.backgroundColor == GREEN) {
+            return;
+        }
+        element.style.backgroundColor = ORANGE;
     }
     else if (num == 2) {
-        element.style.backgroundColor = "green";
+        element.style.backgroundColor = GREEN;
     }
 }
 /**
