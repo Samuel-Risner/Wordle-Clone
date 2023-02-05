@@ -1,7 +1,6 @@
 secret.json
 instance/
 database.db
-disapproved_words.txt
 typings/
 
 # Byte-compiled / optimized / DLL files

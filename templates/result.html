@@ -64,7 +64,7 @@
         {% endif %}
         <tr>
             <td>
-                <button class="text-blue-700" onclick="window.location.href = '/disapprove_word/' + btoa('{{ word_to_guess }}');">
+                <button class="text-blue-700" onclick="window.location.href = '/disapprove_word/{{ language }}/' + btoa('{{ word_to_guess }}');">
                     Disapprove Word
                 </button>
             </td>

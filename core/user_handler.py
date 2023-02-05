@@ -180,7 +180,7 @@ class UserHandler():
 
         return True
     
-    def get_word_finished_info(self, user_id: int, game_id: str) -> tuple[bool, str, int, int] | None:
+    def get_word_finished_info(self, user_id: int, game_id: str) -> tuple[bool, str, int, int, str] | None:
         """Returns "None" if the word with the unique id `game_id` is not in "self.finished_words" or the user id
         `user_id` does not match the one of the word.
         
@@ -188,7 +188,8 @@ class UserHandler():
             - `True` if the game was won, `False` if not.
             - The word the user had to guess.
             - How many tries the user had in total to guess the word.
-            - How many tries the user needed to guess the word (which is irrelevant when the user lost)."""
+            - How many tries the user needed to guess the word (which is irrelevant when the user lost).
+            - The language abbreviation of the word."""
 
         word = self.finished_words.get(game_id)
 
@@ -198,7 +199,7 @@ class UserHandler():
         if word.user_id != user_id:
             return None
         
-        return word.victory, word.word, word.amount_tries, word.remaining_tries
+        return word.victory, word.word, word.amount_tries, word.remaining_tries, word.language
     
     def get_active_games(self, user_id: int) -> list[tuple[str, str, str, int, int]] | None:
         """Returns a list cantaining zero or more active games. Each active game is a tuple consisting of:
@@ -261,7 +262,7 @@ class UserHandler():
         
         return self.word_loader.get_word_lengths(language)
     
-    def disapprove_word(self, user_id: int, word: str) -> bool:
+    def disapprove_word(self, user_id: int, word: str, language: str) -> bool:
         def _can_submit(current_time: int, entrys: list[int]) -> bool:
             to_remove: list[int] = list()
 
@@ -284,7 +285,7 @@ class UserHandler():
         
         entrys.append(current_time)
 
-        with open(settings.disapprove.PATH_TO_FILE, "a") as d:
+        with open(f"{settings.disapprove.PATH_TO_FILE}{language}.txt", "a") as d:
             d.write(f"{word}\n")
                 
         return True

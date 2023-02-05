@@ -1,4 +1,4 @@
-PATH_TO_FILE = "disapproved_words.txt"
+PATH_TO_FILE = "disapprove/"
 
 MAXIMUM_ENTRYS_PER_PERIOD = 10
 """During the period of "PERIOD_IN_MS" only this many words may be disapproved."""

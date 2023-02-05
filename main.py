@@ -80,23 +80,29 @@ def add_word(game_id: str, word: str):
         
     return settings.words.DEFAULT_JSON_RESPONSE
 
-@app.route("/disapprove_word/<word>", methods=["GET", "POST"])
+@app.route("/disapprove_word/<language>/<word>", methods=["GET", "POST"])
 @login_required # type: ignore 
-def disapprove_word(word: str):
+def disapprove_word(language: str, word: str):
+    if not check_language(language):
+        return render_error(400)
+
+    if language not in user_handler.get_supported_languages():
+        return render_error(400)
+
     b64_decoded: None | str = None
 
     try:
         b64_decoded = base64.b64decode(word).decode("UTF-8")
     except binascii.Error:
-        pass
+        return render_error(400)
     except UnicodeDecodeError:
-        pass
+        return render_error(400)
 
     if b64_decoded is None:
         return render_error(400)
 
     if request.method == "POST":
-        if user_handler.disapprove_word(current_user.id, b64_decoded): # type: ignore
+        if user_handler.disapprove_word(current_user.id, b64_decoded, language): # type: ignore
             flash("Word was successfully disapproved!", category="success")
         else:
             flash("Word could not be disapproved. Too many reported.", category="error")
@@ -132,7 +138,8 @@ def game_result(game_id: str):
         word_to_guess=word_info[1],
         available_tries=word_info[2],
         remaining_tries=word_info[3],
-        user=current_user
+        user=current_user,
+        language=word_info[4]
     )
 
 @app.route("/game/play/<game_id>")
