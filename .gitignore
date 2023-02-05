@@ -2,6 +2,7 @@ secret.json
 instance/
 database.db
 typings/
+disapprove/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
