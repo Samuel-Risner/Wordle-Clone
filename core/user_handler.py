@@ -100,7 +100,7 @@ class UserHandler():
             self.logger.debug(f"The user with the id: '{user_id}' has no game with the unique id: '{game_id}'.")
             return None
         
-        if word.user_id != user_id:
+        if word.USER_ID != user_id:
             self.logger.critical(f"Some logic error happened. Function: 'get_word', user id: '{user_id}', unique id: '{game_id}'.")
             return None
         
@@ -135,7 +135,7 @@ class UserHandler():
         if word is None:
             return -4, None
         
-        if word.user_id != user_id:
+        if word.USER_ID != user_id:
             return -5, None
         
         return word.add_try(word_test)
@@ -150,7 +150,7 @@ class UserHandler():
         if word is None:
             return False
 
-        if word.user_id != user_id:
+        if word.USER_ID != user_id:
             return False
 
         word = self.active_words.pop(game_id)
@@ -171,7 +171,7 @@ class UserHandler():
         if word is None:
             return False
 
-        if word.user_id != user_id:
+        if word.USER_ID != user_id:
             return False
 
         self.finished_words.pop(game_id)
@@ -196,10 +196,10 @@ class UserHandler():
         if word is None:
             return None
         
-        if word.user_id != user_id:
+        if word.USER_ID != user_id:
             return None
         
-        return word.victory, word.word, word.amount_tries, word.remaining_tries, word.language
+        return word.victory, word.WORD, word.AMOUNT_TRIES, word.remaining_tries, word.LANGUAGE
     
     def get_active_games(self, user_id: int) -> list[tuple[str, str, str, int, int]] | None:
         """Returns a list cantaining zero or more active games. Each active game is a tuple consisting of:
@@ -227,7 +227,7 @@ class UserHandler():
             if game is None:
                 continue
 
-            to_return.append((game_id, game.language, game.word, game.amount_tries, game.remaining_tries))
+            to_return.append((game_id, game.LANGUAGE, game.WORD, game.AMOUNT_TRIES, game.remaining_tries))
 
         return to_return
     

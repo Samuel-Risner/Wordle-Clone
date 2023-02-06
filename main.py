@@ -44,7 +44,7 @@ HOME_CONTENTS = load_home_contents()
 def load_user(user_id): # type: ignore 
     return MODEL_USER.query.get(
         int(user_id)
-        )
+    )
 
 @app.route("/json/get_progress/<game_id>", methods=["POST", "GET"])
 @login_required # type: ignore 
@@ -182,8 +182,8 @@ def game(game_id: str):
     return render_template(
         "game.html",
         game_id=game_id,
-        amount_tries=word.amount_tries,
-        word_length=len(word.word),
+        amount_tries=word.AMOUNT_TRIES,
+        word_length=len(word.WORD),
         user=current_user
     )
 

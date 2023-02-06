@@ -5,15 +5,15 @@ from ._word_loader import WordLoader
 class Word():
 
     def __init__(self, word: str, user_id: int, amount_tries: int, word_loader:WordLoader, language: str):
-        self.word = word
-        self.user_id = user_id
-        self.amount_tries = amount_tries
-        self.word_loader = word_loader
-        self.language = language
-        self.remaining_tries = amount_tries
+        self.WORD: str                  = word
+        self.USER_ID: int               = user_id
+        self.AMOUNT_TRIES: int          = amount_tries
+        self.WORD_LOADER: WordLoader    = word_loader
+        self.LANGUAGE: str              = language
 
-        self.victory = False
-        self.try_results = list()
+        self.remaining_tries: int                       = amount_tries
+        self.victory: bool                              = False
+        self.try_results: list[tuple[str, list[int]]]   = list()
     
     def get_progress(self) -> list[tuple[str, list[int]]]:
         return self.try_results
@@ -49,7 +49,7 @@ class Word():
                 return -2, None
         
         # if the word exists or not
-        if not self.word_loader.word_exists(word_test, len(word_og), self.language, False):
+        if not self.WORD_LOADER.word_exists(word_test, len(word_og), self.LANGUAGE, False):
             return -3, None
 
         # create the list for returning to the user
@@ -86,7 +86,7 @@ class Word():
         
         self.remaining_tries -= 1
 
-        success, result = self._do_try(word_test, self.word)
+        success, result = self._do_try(word_test, self.WORD)
 
         # if an error occured during comparing
         # no try is lost
@@ -95,7 +95,7 @@ class Word():
             return success, result
         
         # save the try
-        self.try_results.append([word_test, result])
+        self.try_results.append((word_test, result))
 
         words_match = True
         for character_match in result:
