@@ -38,22 +38,26 @@ login_manager.init_app(app) # type: ignore
 init_error_pages(app)
 
 logger = logging.getLogger("main")
-
 HOME_CONTENTS = load_home_contents()
 
 @login_manager.user_loader # type: ignore
 def load_user(user_id): # type: ignore 
-    return MODEL_USER.query.get(int(user_id))  # type: ignore
+    return MODEL_USER.query.get(
+        int(user_id)
+        )
 
 @app.route("/json/get_progress/<game_id>", methods=["POST", "GET"])
 @login_required # type: ignore 
 def get_progress(game_id: str) -> Response:
-    """Either returns the tries the user made dumped as json or "None" dumped as json when something went wromg."""
+    """Either returns the tries the user made dumped as json or "None" dumped as json when something went wrong."""
 
     if not check_game_id(game_id):
         return settings.words.DEFAULT_JSON_RESPONSE
     
-    progress = user_handler.get_word_progress(current_user.id, game_id) # type: ignore
+    progress = user_handler.get_word_progress(
+        current_user.id, # type: ignore
+        game_id
+    )
     
     if progress is None:
         return settings.words.DEFAULT_JSON_RESPONSE
@@ -68,11 +72,17 @@ def add_word(game_id: str, word: str):
     if (not check_game_id(game_id)) or (not check_word_characters(word)):
         return settings.words.DEFAULT_JSON_RESPONSE
     
-    success, result = user_handler.do_try(current_user.id, game_id, word) # type: ignore
+    success, result = user_handler.do_try(
+        current_user.id, # type: ignore
+        game_id, word
+    )
 
     # defeat or victory / game over
     if success in (1, 2, -6):
-        user_handler.finish_word(current_user.id, game_id) # type: ignore
+        user_handler.finish_word(
+            current_user.id, # type: ignore
+            game_id
+        )
     
     # no error occured
     if (success >= 0):
@@ -102,7 +112,11 @@ def disapprove_word(language: str, word: str):
         return render_error(400)
 
     if request.method == "POST":
-        if user_handler.disapprove_word(current_user.id, b64_decoded, language): # type: ignore
+        if user_handler.disapprove_word(
+            current_user.id, # type: ignore
+            b64_decoded,
+            language
+        ):
             flash("Word was successfully disapproved!", category="success")
         else:
             flash("Word could not be disapproved. Too many reported.", category="error")
@@ -119,8 +133,15 @@ def game_result(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
     
-    word_info = user_handler.get_word_finished_info(current_user.id, game_id) # type: ignore
-    user_handler.remove_word(current_user.id, game_id) # type: ignore
+    word_info = user_handler.get_word_finished_info(
+        current_user.id, # type: ignore
+        game_id
+    )
+
+    user_handler.remove_word(
+        current_user.id, # type: ignore
+        game_id
+    )
 
     if word_info is None:
         return render_error(400)
@@ -150,7 +171,10 @@ def game(game_id: str):
     if not check_game_id(game_id):
         return render_error(404)
 
-    word = user_handler.get_word(current_user.id, game_id) # type: ignore
+    word = user_handler.get_word(
+        current_user.id, # type: ignore
+        game_id
+    )
 
     if word is None:
         return render_error(404)
@@ -257,7 +281,9 @@ def select_game_language():
 def active_games():
     """Returns a rendered template displaying the games the user currently has runnung."""
 
-    games = user_handler.get_active_games(current_user.id) # type: ignore
+    games = user_handler.get_active_games(
+        current_user.id # type: ignore
+    )
 
     return render_template("active_games.html", active_games=games, user=current_user)
 
@@ -266,7 +292,9 @@ def active_games():
 def unviewed_scores():
     """Returns a rendered template displaying the scores/ game results the user hasn't seen yet."""
 
-    game_ids = user_handler.get_unviewed_scores(current_user.id) # type: ignore
+    game_ids = user_handler.get_unviewed_scores(
+        current_user.id # type: ignore
+    )
 
     return render_template(
         "unviewed_scores.html",
